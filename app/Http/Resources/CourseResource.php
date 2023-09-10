@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class CourseResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return array(
+            ...parent::toArray($request),
+
+            "activities" => ActivityResource::collection($this->whenLoaded("activities")),
+
+            "songs" => SongResource::collection($this->whenLoaded("songs")),
+        );
+    }
+
+
+    // "cohort" => $this->whenLoaded("cohort", new CohortResource($this->cohort)),
+}
