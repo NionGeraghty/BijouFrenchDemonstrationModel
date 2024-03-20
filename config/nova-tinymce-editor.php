@@ -40,13 +40,14 @@ return [
         'image',
         'media',
         'table',
+        'textcolor',
         'code',
         'wordcount',
         'autoresize',
     ],
     'toolbar' => [
         'undo redo restoredraft | h2 h3 h4 |
-                 bold italic underline strikethrough blockquote removeformat |
+                 bold italic underline strikethrough blockquote forecolor removeformat |
                  align bullist numlist outdent indent | image link anchor table | code fullscreen spoiler',
     ],
 
