@@ -83,6 +83,14 @@ class ActivityController extends Controller
         return new ActivityResource($activity);
     }
 
+    public function downloadWorksheet(Activity $activity) {
+        return response()->download(storage_path("app/public/" . $activity->worksheet), $activity->worksheet_name);
+    }
+
+    public function downloadAnswers(Activity $activity) {
+        return response()->download(storage_path("app/public/" . $activity->answers), $activity->answers_name);
+    }
+
     public function uploadWorksheet(Request $request, Activity $activity) {
         $request->validate([
             'worksheet' => 'required|mimes:docx',

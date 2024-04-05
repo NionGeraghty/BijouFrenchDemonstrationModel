@@ -9,7 +9,11 @@ class Song extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'order_column', 'mp3',  'lyrics', 'course_id'];
+    protected $fillable = ['title', 'order_column', 'mp3',
+    'mp3_name',
+      'lyrics',
+      'lyrics_name',
+      'course_id'];
 
     public function course() {
         return $this->belongsTo(Course::class);

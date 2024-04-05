@@ -48,8 +48,8 @@ class Song extends Resource
             Text::make('Order Column')->sortable()->default(function ($request){
                 return \App\Models\Activity::max('order_column') + 1;
             })->hideFromIndex()->hideWhenUpdating(),
-            File::make('MP3')->disk('public')->path("files"),
-            File::make('Lyrics')->disk('public')->path("files"),
+            File::make('MP3')->disk('public')->path("files")->storeOriginalName('mp3_name'),
+            File::make('Lyrics')->disk('public')->path("files")->storeOriginalName('lyrics_name'),
             BelongsTo::make('Course'),
         ];
     }

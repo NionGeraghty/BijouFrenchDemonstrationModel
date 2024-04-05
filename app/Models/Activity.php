@@ -9,7 +9,12 @@ class Activity extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'order_column', 'worksheet', 'answers', 'course_id'];
+    protected $fillable = ['title', 'order_column',
+    'worksheet',
+    'worksheet_name',
+    'answers',
+    'answers_name',
+    'course_id'];
 
     public function course() {
         return $this->belongsTo(Course::class);

@@ -48,8 +48,8 @@ class Activity extends Resource
             Text::make('Order Column')->sortable()->default(function ($request){
                 return \App\Models\Activity::max('order_column') + 1;
             })->hideFromIndex()->hideWhenUpdating(),
-            File::make('Worksheet')->disk('public')->path("files"),
-            File::make('Answers')->disk('public')->path("files"),
+            File::make('Worksheet')->disk('public')->path("files")->storeOriginalName('worksheet_name'),
+            File::make('Answers')->disk('public')->path("files")->storeOriginalName('answers_name'),
             BelongsTo::make('Course'),
         ];
     }
