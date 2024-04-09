@@ -3,7 +3,11 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "build-cohorts": "cd nova-components/Cohorts && npm run dev",
+        "build-cohorts-prod": "cd nova-components/Cohorts && npm run prod",
+        "build-pages": "cd nova-components/Pages && npm run dev",
+        "build-pages-prod": "cd nova-components/Pages && npm run prod"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

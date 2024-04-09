@@ -4,7 +4,13 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
+// use Laravel\Nova\Fields\HasOne;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Bijou\Cohorts\Cohorts;
+
 
 class Cohort extends Resource
 {
@@ -20,7 +26,7 @@ class Cohort extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'title';
 
     /**
      * The columns that should be searched.
@@ -41,6 +47,10 @@ class Cohort extends Resource
     {
         return [
             ID::make()->sortable(),
+            Text::make('Title')->sortable(),
+            Boolean::make('Active')->sortable(),
+            BelongsTo::make('Course')->nullable()
+
         ];
     }
 
@@ -52,7 +62,7 @@ class Cohort extends Resource
      */
     public function cards(NovaRequest $request)
     {
-        return [];
+        return [new Cohorts];
     }
 
     /**

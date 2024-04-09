@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Course extends Resource
@@ -47,6 +48,7 @@ class Course extends Resource
             Text::make('Access Code'),
             HasMany::make('Activities'),
             HasMany::make('Songs'),
+            BelongsTo::make('Cohort')->nullable()->readonly()->help("Update the cohort by Publishing the course."),
 
         ];
     }
@@ -92,6 +94,10 @@ class Course extends Resource
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+               (new \App\Nova\Actions\PublishCourse)
+                ->confirmText("Select a cohort to publish this course to...")
+                ->confirmButtonText("Publish"),
+        ];
     }
 }

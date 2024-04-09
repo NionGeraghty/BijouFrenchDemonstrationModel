@@ -5,6 +5,8 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Action;
+use Laravel\Nova\Fields\BelongsToMany;
 
 use Murdercode\TinymceEditor\TinymceEditor;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -46,7 +48,8 @@ class Article extends Resource
             ID::make()->sortable(),
             Text::make("Title")->sortable(),
             // Text::make("Text")->sortable()->hideFromIndex()
-             TinymceEditor::make("Text")
+            TinymceEditor::make("Text"),
+            // BelongsToMany::make("Pages")->hideFromIndex(),
 
         ];
     }
@@ -92,6 +95,10 @@ class Article extends Resource
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+            (new \App\Nova\Actions\PublishArticleToPage)
+                ->confirmText("Select a page to publish this article to...")
+                ->confirmButtonText("Publish"),
+        ];
     }
 }

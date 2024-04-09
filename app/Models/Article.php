@@ -11,7 +11,7 @@ class Article extends Model
     use Sluggable;
     use HasFactory;
 
-    protected $fillable = ['title', 'text', 'slug'];
+    protected $fillable = ['title', 'text', 'slug', 'page_id'];
 
      /**
      * Return the sluggable configuration array for this model.
@@ -25,5 +25,9 @@ class Article extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    public function page() {
+        return $this->belongsTo(Page::class);
     }
 }
