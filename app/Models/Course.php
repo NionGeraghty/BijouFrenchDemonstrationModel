@@ -22,4 +22,8 @@ class Course extends Model
     public function songs() {
         return $this->hasMany(Song::class);
     }
+
+    public function article() {
+        return $this->belongsTo(Article::class);
+    }
 }

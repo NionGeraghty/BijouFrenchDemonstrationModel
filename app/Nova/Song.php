@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\BelongsTo;
 
@@ -18,6 +19,9 @@ class Song extends Resource
      */
     public static $model = \App\Models\Song::class;
 
+
+
+    public static $perPageViaRelationship = 20;
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -44,15 +48,20 @@ class Song extends Resource
     {
         return [
             ID::make()->sortable(),
+
             Text::make('Title')->sortable(),
             Text::make('Order Column')->sortable()->default(function ($request){
                 return \App\Models\Activity::max('order_column') + 1;
             })->hideFromIndex()->hideWhenUpdating(),
-            File::make('MP3')->disk('public')->path("files")->storeOriginalName('mp3_name'),
-            File::make('Lyrics')->disk('public')->path("files")->storeOriginalName('lyrics_name'),
+            File::make('MP3')->disk('public')->hideFromDetail()->path("files")->storeOriginalName('mp3_name'),
+            Text::make('mp3_name')->hideWhenUpdating()->hideWhenCreating(),
+            File::make('Lyrics')->disk('public')->hideFromDetail()->path("files")->storeOriginalName('lyrics_name'),
+            Text::make('lyrics_name')->hideFromIndex()->hideWhenUpdating()->hideWhenCreating(),
             BelongsTo::make('Course'),
         ];
     }
+
+
 
     /**
      * Get the cards available for the request.

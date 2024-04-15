@@ -18,6 +18,9 @@ class Activity extends Resource
      */
     public static $model = \App\Models\Activity::class;
 
+
+
+    public static $perPageViaRelationship = 20;
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -48,8 +51,10 @@ class Activity extends Resource
             Text::make('Order Column')->sortable()->default(function ($request){
                 return \App\Models\Activity::max('order_column') + 1;
             })->hideFromIndex()->hideWhenUpdating(),
-            File::make('Worksheet')->disk('public')->path("files")->storeOriginalName('worksheet_name'),
-            File::make('Answers')->disk('public')->path("files")->storeOriginalName('answers_name'),
+            File::make('Worksheet')->disk('public')->hideFromDetail()->path("files")->storeOriginalName('worksheet_name'),
+            Text::make("Worksheet Name")->hideWhenUpdating()->hideWhenCreating()->readonly(),
+            File::make('Answers')->disk('public')->hideFromDetail()->path("files")->storeOriginalName('answers_name'),
+            Text::make("Answers Name")->hideFromIndex()->hideWhenUpdating()->hideWhenCreating()->readonly(),
             BelongsTo::make('Course'),
         ];
     }

@@ -20,7 +20,8 @@
         "murdercode/nova4-tinymce-editor": "^1.2",
         "spatie/eloquent-sortable": "^4.0",
         "bijou/cohorts": "@dev",
-        "bijou/pages": "@dev"
+        "bijou/pages": "@dev",
+        "bijou/live-courses": "@dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -55,6 +56,10 @@
         {
             "type": "path",
             "url": "./nova-components/Pages"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/LiveCourses"
         }
     ],
     "scripts": {

@@ -22,7 +22,4 @@ class CourseResource extends JsonResource
             "songs" => SongResource::collection($this->whenLoaded("songs")),
         );
     }
-
-
-    // "cohort" => $this->whenLoaded("cohort", new CohortResource($this->cohort)),
 }

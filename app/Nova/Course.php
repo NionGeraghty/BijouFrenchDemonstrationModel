@@ -7,6 +7,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Course extends Resource
@@ -43,15 +44,34 @@ class Course extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make()->sortable(),
+            //     Boolean::make("Active", function() {
+            //         return $this->cohort_id;
+            // })->onlyOnDetail(),
             Text::make('Title')->sortable(),
+            BelongsTo::make('Cohort')->nullable()->readonly()->help("Update the cohort by Publishing the course."),
+            ID::make()->sortable()->hideFromDetail(),
             Text::make('Access Code'),
+            BelongsTo::make("Article")->nullable()->hideFromIndex(),
             HasMany::make('Activities'),
             HasMany::make('Songs'),
-            BelongsTo::make('Cohort')->nullable()->readonly()->help("Update the cohort by Publishing the course."),
+
 
         ];
     }
+
+    // public function fieldsForDetail(NovaRequest $request)
+    // {
+    //     return [
+    //         Boolean::make("Active", function() {
+    //              return $this->cohort_id != null;
+    //         }),
+    //         Text::make('Title')->sortable(),
+    //         Text::make('Access Code'),
+    //         HasMany::make('Activities'),
+    //         HasMany::make('Songs'),
+    //         BelongsTo::make('Cohort')->nullable()->readonly()->help("Update the cohort by Publishing the course."),
+    //     ];
+    // }
 
     /**
      * Get the cards available for the request.

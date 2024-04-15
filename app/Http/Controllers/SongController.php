@@ -118,6 +118,16 @@ class SongController extends Controller
 
     }
 
+    public function downloadMp3(Song $song)
+    {
+        return response()->download(storage_path("app/public/" . $song->mp3), $song->mp3_name);
+    }
+
+    public function downloadLyrics(Song $song)
+    {
+        return response()->download(storage_path("app/public/" . $song->lyrics), $song->lyrics_name);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

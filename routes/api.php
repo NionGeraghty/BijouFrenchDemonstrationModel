@@ -37,6 +37,8 @@ Route::get('activities/{activity}/answers', [ActivityController::class, 'downloa
 
 Route::get('songs', [SongController::class, 'index']);
 Route::get('songs/{song}', [SongController::class, 'show']);
+Route::get('songs/{song}/mp3', [SongController::class, 'downloadMp3']);
+Route::get('songs/{song}/lyrics', [SongController::class, 'downloadLyrics']);
 
 Route::get('courses', [CourseController::class, 'index']);
 // Route::get('courses/{slug}', [CourseController::class, 'showBySlug']);

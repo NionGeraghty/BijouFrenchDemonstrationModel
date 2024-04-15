@@ -7,7 +7,9 @@
         "build-cohorts": "cd nova-components/Cohorts && npm run dev",
         "build-cohorts-prod": "cd nova-components/Cohorts && npm run prod",
         "build-pages": "cd nova-components/Pages && npm run dev",
-        "build-pages-prod": "cd nova-components/Pages && npm run prod"
+        "build-pages-prod": "cd nova-components/Pages && npm run prod",
+        "build-live-courses": "cd nova-components/LiveCourses && npm run dev",
+        "build-live-courses-prod": "cd nova-components/LiveCourses && npm run prod"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

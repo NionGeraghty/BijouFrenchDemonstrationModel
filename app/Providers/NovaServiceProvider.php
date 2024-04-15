@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+
 // use Bijou\Pages\Pages;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -20,6 +21,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
         // TinyMCE Mirror
         Nova::script('custom', 'https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js');
+         Nova::withoutThemeSwitcher();
     }
 
     /**
@@ -60,7 +62,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function dashboards()
     {
         return [
-            new \App\Nova\Dashboards\Main,
+            \App\Nova\Dashboards\Main::make(),
         ];
     }
 
