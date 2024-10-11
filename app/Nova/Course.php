@@ -8,6 +8,14 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Repeater;
+use Laravel\Nova\Panel;
+
+use App\Nova\Repeater\ReorderGames;
+use App\Nova\Repeater\OddOneOutGames;
+use App\Nova\Repeater\CategoryGames;
+
+
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Course extends Resource
@@ -54,9 +62,27 @@ class Course extends Resource
             BelongsTo::make("Article")->nullable()->hideFromIndex(),
             HasMany::make('Activities'),
             HasMany::make('Songs'),
+            Panel::make('Games', $this->gameFields()),
 
 
         ];
+    }
+
+    protected function gameFields() {
+        return [
+            Repeater::make('Reorder Games')
+				->repeatables([
+					ReorderGames::make(),
+				])->asJson(),
+            Repeater::make('Odd One Out Games')
+				->repeatables([
+					OddOneOutGames::make(),
+				])->asJson(),
+            Repeater::make('Category Games')
+				->repeatables([
+					CategoryGames::make(),
+				])->asJson(),
+            ];
     }
 
     // public function fieldsForDetail(NovaRequest $request)

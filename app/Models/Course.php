@@ -9,7 +9,21 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', "article_id", "cohort_id", "access_code" ];
+    protected $fillable = ['
+        title',
+        "article_id",
+        "cohort_id",
+        "access_code",
+        "reorder_games",
+        "odd_one_out_games",
+        "category_games",
+    ];
+
+    protected $casts = [
+        'reorder_games' => 'array',
+        'odd_one_out_games' => 'array',
+        'category_games' => 'array',
+    ];
 
     public function cohort() {
         return $this->belongsTo(Cohort::class);

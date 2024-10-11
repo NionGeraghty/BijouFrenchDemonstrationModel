@@ -33,7 +33,8 @@ class Article extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'tite',
+        'text',
     ];
 
     /**
