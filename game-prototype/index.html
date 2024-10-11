@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+
+  <body>
+
+    <!-- 
+      Game types
+      1. Order the words
+      2. Odd one out
+      3. Categories
+      4. Singular or plural 
+      // 4 is same as 3 with just two cats
+    
+    -->
+
+
+    <div data-game="order-the-words" class="game game--order-the-words">
+      <div class="question">
+        <button data-answer="0">Je</button>
+        <button data-answer="2">Bijou</button>
+        <button data-answer="1">m'appelle</button>
+      </div>
+      <div class="tip">Try again</div>
+      <div class="answers">
+
+      </div>
+
+      <div class="success">
+        Well done
+      </div>
+
+      <button class="reset">Reset</button>
+
+    </div>
+
+    <div class="game game--odd-one-out" data-game="odd-one-out">
+      <div class="question">
+        <button>Pomme</button>
+        <button>Orange</button>
+        <button data-answer="true">Cheval</button>
+        <button>Cerise</button>
+      </div>
+      <div class="tip">Try again</div>
+
+
+      <div class="success">
+        Well done
+      </div>
+      <button class="reset">Reset</button>
+
+    </div>
+
+    <div class="game game--categories" data-game="categories">
+      <div class="question">
+        <button data-answer="fruit">Orange</button>
+        <button data-answer="fruit">Pomme</button>
+        <!-- <button data-answer="animals">Cheval</button>
+        <button data-answer="animals">Chat</button>
+        <button data-answer="animals">Chien</button>
+        <button data-answer="fruit">Cerise</button> -->
+      </div>
+      <div class="tip">Try again</div>
+      <div class="answers">
+        <div>
+          <div class="answer-container">
+            <p>Animals</p>
+
+            <div data-answer="animals">
+            </div>
+            <button class="select">Select</button>
+          </div>
+
+          <div class="answer-container">
+            <p>Fruit</p>
+            <div data-answer="fruit">
+            </div>
+            <button class="select">Select</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="success">
+        Well done
+      </div>
+      <button class="reset">Reset</button>
+
+
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+
+</html>
