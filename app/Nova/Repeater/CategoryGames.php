@@ -20,8 +20,10 @@ class CategoryGames extends Repeatable
     public function fields(NovaRequest $request)
     {
         return [
-            Text::make('Title'),
-            Textarea::make('Game'),
+
+            Textarea::make('Game')->help("One option per line. Use the format word:category for each line"),
+            Text::make('Hint')->help("Optional"),
+
         ];
     }
 }

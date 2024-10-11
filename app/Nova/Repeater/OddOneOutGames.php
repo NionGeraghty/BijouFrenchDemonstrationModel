@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\Repeater\Repeatable;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 
 class OddOneOutGames extends Repeatable
 {
@@ -18,8 +19,9 @@ class OddOneOutGames extends Repeatable
     public function fields(NovaRequest $request)
     {
         return [
-            Text::make('Question'),
+            Textarea::make('Question')->help("One option per line"),
             Text::make('Solution'),
+            Text::make('Hint')->help("Optional"),
         ];
     }
 }

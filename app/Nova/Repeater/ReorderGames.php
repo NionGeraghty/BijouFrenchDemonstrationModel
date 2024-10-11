@@ -18,8 +18,9 @@ class ReorderGames extends Repeatable
     {
         return [
 
-            Text::make('Question'),
-            Text::make('Solution'),
+            Text::make('Question')->help("No capital letters!"),
+            Text::make('Solution')->help("No capital letters!"),
+            Text::make('Hint')->help("Optional"),
         ];
     }
 }
