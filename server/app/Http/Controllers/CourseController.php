@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Models\Cohort;
+use App\Models\GameAttempt;
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -109,6 +112,59 @@ class CourseController extends Controller
         //
         $course->delete();
         return response()->noContent();
+
+    }
+
+    public function logGameAttempt(Request $request, $slug)
+    {
+        // get the attached article slug
+        $cohort = Cohort::where('slug', $slug)->first();
+
+        if (!$cohort) {
+            return response()->json(["error" => "Course not found"], 404);
+        }
+
+        $course = Course::where('cohort_id', $cohort->id)->first();
+
+        if (!$course) {
+            return response()->json(["error" => "Course not found"], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required',
+            "startedAt" => "required",
+            "course" => "required",
+            "completedAt" => "nullable",
+            "timestamps" => "nullable",
+            "nonce"=>"nullable",
+        ]);
+
+        // if we have a nonce try to find the attempt by nonce
+        $attmempt = GameAttempt::where('nonce', $validated["nonce"])->first();
+        // update
+        if ($attmempt) {
+            $data = [
+                "name" => $validated["name"],
+                "game_data" => $validated["timestamps"],
+            ];
+
+            if (isset($validated["completedAt"])) {
+                $data["completed_at"] = $validated["completedAt"];
+            }
+            $attmempt->update($data);
+            return response()->json($attmempt);
+        }
+
+        // make new
+
+        $attempt = GameAttempt::create([
+            "name" => $validated["name"],
+            "course_id" => $course->id,
+            "nonce" => $validated["nonce"],
+            "game_data" => $validated["timestamps"],
+        ]);
+
+        return response()->json($attempt);
 
     }
 }

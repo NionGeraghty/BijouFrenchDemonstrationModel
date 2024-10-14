@@ -6,6 +6,8 @@ export const load = (async ({ params: { slug }, locals: { services } }) => {
 		const article = await services.articles.getArticleBySlug(slug);
 		const course = await services.cohorts.getActiveCourseBySlud(slug);
 
+		console.log({ course });
+
 		if (!article) {
 			throw error(404, 'Not Found');
 		}

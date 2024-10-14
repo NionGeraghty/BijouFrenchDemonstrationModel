@@ -44,6 +44,8 @@ Route::get('courses', [CourseController::class, 'index']);
 // Route::get('courses/{slug}', [CourseController::class, 'showBySlug']);
 Route::get('courses/{course}', [CourseController::class, 'show']);
 
+Route::post('courses/{slug}/game-attempt', [CourseController::class, 'logGameAttempt']);
+
 Route::get('cohorts', [CohortController::class, 'index']);
 Route::get('cohorts/{cohort}', [CohortController::class, 'show']);
 Route::get('cohorts/{cohort}/course', [CohortController::class, 'showActiveCourse']);

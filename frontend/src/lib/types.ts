@@ -50,15 +50,18 @@ export type Course = {
 	article_id?: number;
 	cohort_id?: number;
 	access_code?: string;
+	games_active: boolean;
 	reorder_games?: ReorderGame[];
 	odd_one_out_games?: OddOneOutGame[];
 	category_games?: CategoryGame[];
+	match_up_games?: MatchUpGame[];
 };
 
 export type ReorderGame = {
 	fields: {
 		question: string;
 		solution: string;
+		hint: string;
 	};
 };
 
@@ -66,12 +69,32 @@ export type OddOneOutGame = {
 	fields: {
 		question: string;
 		solution: string;
+		hint: string;
 	};
 };
 
 export type CategoryGame = {
 	fields: {
-		title: string;
 		game: string;
+		hint: string;
 	};
+};
+export type MatchUpGame = {
+	fields: {
+		game: string;
+		hint: string;
+	};
+};
+
+export type GameAttempt = {
+	name: string;
+	startedAt: string;
+	course: string;
+	completedAt?: string;
+	nonce?: string;
+	timestamps: {
+		type: string;
+		startedAt: string;
+		completedAt?: string;
+	}[];
 };

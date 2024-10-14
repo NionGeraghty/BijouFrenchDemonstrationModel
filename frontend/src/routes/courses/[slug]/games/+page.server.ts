@@ -5,6 +5,7 @@ export const load = (async ({ params: { slug }, locals: { services } }) => {
 	console.log('course', course.reorder_games);
 
 	return {
-		course
+		course,
+		slug
 	};
 }) satisfies PageServerLoad;

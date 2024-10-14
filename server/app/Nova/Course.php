@@ -14,6 +14,7 @@ use Laravel\Nova\Panel;
 use App\Nova\Repeater\ReorderGames;
 use App\Nova\Repeater\OddOneOutGames;
 use App\Nova\Repeater\CategoryGames;
+use App\Nova\Repeater\MatchUpGames;
 
 
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -70,6 +71,7 @@ class Course extends Resource
 
     protected function gameFields() {
         return [
+            Boolean::make('Games Active'),
             Repeater::make('Reorder Games')
 				->repeatables([
 					ReorderGames::make(),
@@ -81,6 +83,10 @@ class Course extends Resource
             Repeater::make('Category Games')
 				->repeatables([
 					CategoryGames::make(),
+				])->asJson(),
+            Repeater::make('Match Up Games')
+				->repeatables([
+					MatchUpGames::make(),
 				])->asJson(),
             ];
     }

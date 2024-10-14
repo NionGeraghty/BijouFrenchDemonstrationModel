@@ -19,8 +19,8 @@ class OddOneOutGames extends Repeatable
     public function fields(NovaRequest $request)
     {
         return [
-            Textarea::make('Question')->help("One option per line"),
-            Text::make('Solution'),
+            Textarea::make('Question')->help("One option per line")->required(true),
+            Text::make('Solution')->required(true),
             Text::make('Hint')->help("Optional"),
         ];
     }

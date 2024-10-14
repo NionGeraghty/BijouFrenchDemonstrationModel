@@ -4,9 +4,11 @@ namespace App\Nova\Repeater;
 
 use Laravel\Nova\Fields\Repeater\Repeatable;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Fields\Text;
 
-class ReorderGames extends Repeatable
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+
+class MatchUpGames extends Repeatable
 {
     /**
      * Get the fields displayed by the repeatable.
@@ -17,9 +19,7 @@ class ReorderGames extends Repeatable
     public function fields(NovaRequest $request)
     {
         return [
-
-            Text::make('Question')->help("No capital letters!")->required(true),
-            Text::make('Solution')->help("No capital letters!")->required(true),
+            Textarea::make('Game')->help("One option per line. Use the format question:answer for each line.")->required(true),
             Text::make('Hint')->help("Optional"),
         ];
     }

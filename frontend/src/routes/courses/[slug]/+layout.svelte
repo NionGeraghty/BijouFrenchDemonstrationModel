@@ -43,7 +43,7 @@
 						<img src="/songs.png" alt="Songs" />
 					</a>
 
-					{#if data.course.reorder_games || data.course.odd_one_out_games || data.course.category_games}
+					{#if data.course.games_active}
 						<a class="mb-4 block" href={`${slug}/games`}>
 							<img src="/games.png" alt="Games" />
 						</a>

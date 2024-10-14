@@ -17,12 +17,15 @@ class Course extends Model
         "reorder_games",
         "odd_one_out_games",
         "category_games",
+        "games_active",
+        "match_up_games",
     ];
 
     protected $casts = [
         'reorder_games' => 'array',
         'odd_one_out_games' => 'array',
         'category_games' => 'array',
+        'match_up_games' => 'array',
     ];
 
     public function cohort() {
@@ -39,5 +42,9 @@ class Course extends Model
 
     public function article() {
         return $this->belongsTo(Article::class);
+    }
+
+    public function gameAttempts() {
+        return $this->hasMany(GameAttempt::class);
     }
 }

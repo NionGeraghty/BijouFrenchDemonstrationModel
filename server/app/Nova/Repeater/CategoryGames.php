@@ -21,7 +21,7 @@ class CategoryGames extends Repeatable
     {
         return [
 
-            Textarea::make('Game')->help("One option per line. Use the format word:category for each line"),
+            Textarea::make('Game')->help("One option per line. Use the format word:category for each line")->required(true),
             Text::make('Hint')->help("Optional"),
 
         ];

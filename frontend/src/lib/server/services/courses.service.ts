@@ -1,5 +1,5 @@
 import { LARAVEL_API_BASE } from '$env/static/private';
-import type { Course } from '$lib/types';
+import type { Course, GameAttempt } from '$lib/types';
 import APIService from './api.service';
 
 export class CoursesServices extends APIService {
@@ -81,6 +81,19 @@ export class CoursesServices extends APIService {
 			.catch((err) => {
 				throw err?.response?.data;
 			});
+	}
+
+	async logGameAttempt(input: GameAttempt) {
+		console.log('logGameAttempt', input.course, input);
+		try {
+			this.post(`/courses/${input.course}/game-attempt`, input).then((res) => {
+				console.log({ res: res?.data });
+
+				return res?.data || [];
+			});
+		} catch (err) {
+			console.error(err);
+		}
 	}
 }
 

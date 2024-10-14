@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Course;
 use App\Models\Activity;
 use App\Models\Song;
+use App\Models\GameAttempt;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +25,13 @@ Route::get('/', function (Request $request) {
     // attach activities to each course
     $courses->each(function ($course) {
         $course->activities = Activity::where('course_id', $course->id)->get();
-    });
+        $course->game_attempts = GameAttempt::where('course_id', $course->id)->get();
 
-    // attach songs
-    $courses->each(function ($course) {
+
+
         $course->songs = Song::where('course_id', $course->id)->get();
     });
+
 
     return $courses;
 
