@@ -149,7 +149,7 @@ class CourseController extends Controller
             ];
 
             if (isset($validated["completedAt"])) {
-                $data["completed_at"] = $validated["completedAt"];
+                $data["completed_at"] = \Carbon\Carbon::parse($validated["completedAt"]);
             }
             $attmempt->update($data);
             return response()->json($attmempt);

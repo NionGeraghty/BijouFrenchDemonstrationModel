@@ -56,7 +56,7 @@ class GameAttempt extends Model
 
     public function getTimeSpentAttribute() {
         if ($this->completed_at) {
-            return pretty_format_seconds($this->completed_at->diffInSeconds($this->created_at));
+            return pretty_format_seconds(\Carbon\Carbon::parse($this->completed_at)->diffInSeconds($this->created_at));
         }
 
         // find the latest completed at from game_data
