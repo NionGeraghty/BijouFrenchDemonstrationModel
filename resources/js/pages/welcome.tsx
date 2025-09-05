@@ -51,13 +51,13 @@ export default function Welcome() {
 
   <div className="flex flex-col sm:flex-row justify-around gap-4 mt-6">
     <Link
-      href="/minibijou"
+      href="courses/minibijou"
       className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition text-center"
     >
       Mini Bijou
     </Link>
     <Link
-      href="/petitbijou"
+      href="courses/petitbijou"
       className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition text-center"
     >
       Petit Bijou
