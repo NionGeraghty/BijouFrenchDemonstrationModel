@@ -4,7 +4,7 @@ import Footer from '@/components/footer';
 import Header from '@/components/header';
 import Downloadables from '@/components/downloadables';
 
-export default function Courses() {
+export default function Petitbijou() {
     const { auth } = usePage<SharedData>().props;
 
     return (
@@ -52,7 +52,7 @@ export default function Courses() {
                     </div>
                 </div>
 
-                <Downloadables />
+                <Downloadables course="petitbijou" />
             </main>
 
             <Footer />

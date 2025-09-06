@@ -8,18 +8,25 @@ Route::get('/', function () {
 })->name('home');
 
 Route::prefix('courses')->name('courses.')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('courses');
-    })->name('index');
+    Route::get('/', fn () => Inertia::render('courses'))->name('index');
 
-    Route::get('/minibijou', function () {
-        return Inertia::render('minibijou');
-    })->name('minibijou');
+    Route::get('{course}/{page?}', function ($course, $page = null) {
+        if (in_array($course, ['minibijou', 'petitbijou'])) {
+            if (in_array($page, ['activitysheets', 'songs'])) {
+                return Inertia::render('AuthPage', [
+                    'course' => $course,
+                    'page'   => $page,
+                ]);
+            }
 
-    Route::get('/petitbijou', function () {
-        return Inertia::render('petitbijou');
-    })->name('petitbijou');
+            return Inertia::render($course);
+        }
+
+        abort(404);
+    })->where('course', 'minibijou|petitbijou')
+      ->where('page', 'activitysheets|songs');
 });
+
 
 Route::get('aboutbijoufrench', function () {
     return Inertia::render('aboutbijoufrench');
