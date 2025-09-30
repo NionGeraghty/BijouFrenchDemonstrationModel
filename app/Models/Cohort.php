@@ -13,6 +13,7 @@ class Cohort extends Model
         'image',
         'order_column',
         'active',
+        
     ];
 
     protected $casts = [
