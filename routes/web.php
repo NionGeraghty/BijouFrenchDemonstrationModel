@@ -3,63 +3,20 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Cohort;
+use App\Http\Controllers\CourseController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
 Route::prefix('courses')->name('courses.')->group(function () {
-
-    // we never write this
-    // $cohort = $database->query("SELECT * FROM cohorts WHERE id='2'");
-    // if (!$cohort) {
-    //     // throw an error
-    // }
     
-    
-    // eloquent ORM
-    // $cohort = Cohort::where("id", 2)->firstOrFail();
+    Route::get('/', [CourseController::class, 'index'])->name('index');
 
-    // dd = die and dump
-    // dd($cohorts);
-
-    // we need to fetch our cohorts, provide only the relevent data to react, meaning title, slug, img
-    // then update the page to use the data
-    // then once /courses are working we can look at the individual courses + activity sheets
-    //Learn what the hell a controller is
-
-
-    Route::get('/', function () {
-        $cohorts = Cohort::all();
-
-        $courses = $cohorts->map(fn($cohort) =>[
-            'title' => $cohort->title,
-            'slug' => $cohort->slug,
-            'imgSrc' => $cohort->image,
-        ]
-        );
-        return Inertia::render('courses',[
-            'courses'=> $courses,
-        ]);
-    })->name('index');
-
-    Route::get('{course}/{page?}', function ($course, $page = null) {
-    $cohort = Cohort::where('slug', $course)->firstOrFail();
-
-    if (in_array($page, ['activitysheets', 'songs'])) {
-        return Inertia::render('AuthPage', [
-            'course' => $course,
-            'page'   => $page,
-        ]);
-    }
-
-    return Inertia::render($course, [
-        'course' => $cohort,
-    ]);
-})->where('page', 'activitysheets|songs');
-
+    Route::get('{course}/{page?}', [CourseController::class, 'show'])
+        ->where('page', 'activitysheets|songs')
+        ->name('show');
 });
-
 
 Route::get('aboutbijoufrench', function () {
     return Inertia::render('aboutbijoufrench');
