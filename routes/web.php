@@ -19,14 +19,12 @@ Route::get('/', function () {
         ]);
 })->name('home');
 
-Route::prefix('courses')->name('courses.')->group(function () {
-    
-    Route::get('/', [CourseController::class, 'index'])->name('index');
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 
-    Route::get('{course}/{page?}', [CourseController::class, 'show'])
-        ->where('page', 'activitysheets|songs')
-        ->name('show');
-});
+// Matches /courses/minibijou and /courses/minibijou/songs etc.
+Route::get('/courses/{course}/{page?}', [CourseController::class, 'show'])
+    ->where('page', 'activitysheets|songs')
+    ->name('courses.show');
 
 Route::get('aboutbijoufrench', function () {
     return Inertia::render('aboutbijoufrench');
@@ -40,9 +38,9 @@ Route::get('testHome', function () {
     return Inertia::render('testHome');
 })->name('testHome');
 
-/*Route::get('coursepage', function () {
+Route::get('coursepage', function () {
     return Inertia::render('coursepage');
-})->name('coursepage');*/
+})->name('coursepage');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

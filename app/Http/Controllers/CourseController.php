@@ -28,12 +28,12 @@ class CourseController extends Controller
 
         if (in_array($page, ['activitysheets', 'songs'])) {
             return Inertia::render('AuthPage', [
-                'course' => $course,
+                'cohort' => $cohort,
                 'page'   => $page,
             ]);
         }
 
-        return Inertia::render($course, [
+        return Inertia::render('coursepage', [
             'course' => $cohort,
         ]);
     }
