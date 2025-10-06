@@ -29,4 +29,3 @@ export default function CoursePage({course}: CoursePageProps) {
         </div>
     )
 } 
-

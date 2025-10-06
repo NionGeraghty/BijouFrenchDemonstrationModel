@@ -9,9 +9,8 @@ type CoursesProps = {
   courses: {
     title: string
     slug: string
-    imgSrc: string
+    image: string
   }[]
-  
 }
 
 export default function Courses({courses}: CoursesProps) {
@@ -26,7 +25,7 @@ export default function Courses({courses}: CoursesProps) {
       <div className="flex flex-1 flex-col sm:flex-row items-center justify-around py-10">
         { courses.map(course => 
         <div key={course.slug}>
-          <Link href={"courses/" + course.slug}><img width="150" height="150" alt={course.title} src={course.imgSrc}></img></Link>
+          <Link href={"courses/" + course.slug}><img width="150" height="150" alt={course.title} src={course.image}></img></Link>
           <span className='flex justify-center text-bold text-3xl pt-5'>{course.title}</span>
           </div>) }
       </div>

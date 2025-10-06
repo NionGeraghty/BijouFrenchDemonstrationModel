@@ -5,31 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Cohort;
+use App\Models\Course;
 
 class CourseController extends Controller
 {
     public function index(){
         $cohorts = Cohort::all();
 
-        $courses = $cohorts->map(fn($cohort) =>[
-            'title' => $cohort->title,
-            'slug' => $cohort->slug,
-            'imgSrc' => $cohort->image,
-        ]
-        );
         return Inertia::render('courses',[
-            'courses'=> $courses,
+            'courses'=> $cohorts,
         ]);
     }
 
-    public function show($course, $page = null)
+    public function show($cohort, $page = null)
     {
-        $cohort = Cohort::where('slug', $course)->firstOrFail();
+        $cohort = Cohort::where('slug', $cohort)->firstOrFail();
+        $courses = Course::all();
 
         if (in_array($page, ['activitysheets', 'songs'])) {
             return Inertia::render('AuthPage', [
-                'cohort' => $cohort,
-                'page'   => $page,
+                'cohort'  => $cohort,
+                'page'    => $page,
+                'courses' => $courses,
             ]);
         }
 
