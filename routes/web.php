@@ -6,7 +6,17 @@ use App\Models\Cohort;
 use App\Http\Controllers\CourseController;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    $cohorts = Cohort::all();
+
+        $courses = $cohorts->map(fn($cohort) =>[
+            'title' => $cohort->title,
+            'slug' => $cohort->slug,
+        ]
+        );
+
+    return Inertia::render('welcome',[
+            'courses'=> $courses,
+        ]);
 })->name('home');
 
 Route::prefix('courses')->name('courses.')->group(function () {
@@ -29,6 +39,10 @@ Route::get('aboutsue', function () {
 Route::get('testHome', function () {
     return Inertia::render('testHome');
 })->name('testHome');
+
+/*Route::get('coursepage', function () {
+    return Inertia::render('coursepage');
+})->name('coursepage');*/
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

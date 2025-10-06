@@ -2,8 +2,8 @@ import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
-import miniBijou from '@/images/mini-bijou.png';
-import petitBijou from '@/images/petit-bijou.png';
+//import miniBijou from '@/images/mini-bijou.png';
+//import petitBijou from '@/images/petit-bijou.png';
 
 type CoursesProps = {
   courses: {
@@ -16,9 +16,6 @@ type CoursesProps = {
 
 export default function Courses({courses}: CoursesProps) {
     const { auth } = usePage<SharedData>().props;
-
-    
-    
 
   return (
     

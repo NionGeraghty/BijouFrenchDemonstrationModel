@@ -4,7 +4,14 @@ import flagLogo from '@/images/flag-logo.png';
 import children from '@/images/children.png';
 import Footer from '@/components/footer';
 
-export default function Welcome() {
+type CoursesProps = {
+  courses: {
+    title: string
+    slug: string
+  }[] 
+}
+
+export default function Welcome({courses}: CoursesProps) {
     const { auth } = usePage<SharedData>().props;
 
   return (
@@ -50,18 +57,15 @@ export default function Welcome() {
   </p>
 
   <div className="flex flex-col sm:flex-row justify-around gap-4 mt-6">
-    <Link
-      href="courses/minibijou"
+    { courses.map(course => 
+        <div key={course.slug}>
+          <Link
+      href={"courses/" + course.slug}
       className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition text-center"
     >
-      Mini Bijou
+      {course.title}
     </Link>
-    <Link
-      href="courses/petitbijou"
-      className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition text-center"
-    >
-      Petit Bijou
-    </Link>
+          </div>) }
   </div>
 </div>
         </div>
