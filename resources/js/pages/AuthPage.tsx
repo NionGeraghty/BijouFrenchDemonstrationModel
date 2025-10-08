@@ -16,20 +16,36 @@ type AuthPageProps = {
     title: string;
     access_code: string;
   }[];
+  songs:{
+    title: string;
+    course_id: string;
+    mp3: string;
+    lyrics: string;
+  }[];
+  activities:{
+    title: string;
+    course_id: string;
+    worksheet: string;
+    answers: string;
+  }[];
 };
 
-export default function AuthPage({cohort, courses}:AuthPageProps) {
+export default function AuthPage({cohort, courses, songs, activities}:AuthPageProps) {
   const { course, page } = usePage<{ course: string; page: string }>().props;
   const [password, setPassword] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticatedCourse, setAuthenticatedCourse] = useState<string | null>(null);
 
   const handleClick = () =>{
     const match = courses.find(c => c.access_code === password);
 
     if (match){
-        alert("Valid Password! :)");
+        setAuthenticated(true);
+        setAuthenticatedCourse(match.title);
     }
     else{
-        alert("Invalid Password! :(")
+        setPassword("");
+        alert("Invalid Password! :(");
     }
   };
 
@@ -39,13 +55,19 @@ export default function AuthPage({cohort, courses}:AuthPageProps) {
 
             <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
 
-                <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
+                {!authenticated ? (<div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
                     This course requires an access code.<br />
                     Please enter your code below
                     <input
                         type="password"
+                        value={password}
                         placeholder="Enter code"
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e)=>{
+                          if(e.key === "Enter"){
+                            handleClick();
+                          }
+                        }}
                         className="w-full border rounded-lg px-4 py-2 mb-4 bg-white text-black border-black"
                     />
                     <button
@@ -54,7 +76,44 @@ export default function AuthPage({cohort, courses}:AuthPageProps) {
                     >
                     Authenticate
                     </button>
-                </div>
+                </div>) : (
+                  (()=>{
+                    switch (page){
+                      case "songs":
+                        return (
+                        <div className='pr-10 order-[2]'>
+                          <ul className = 'posts pt-10 pb-16'>
+                            {
+                              songs.filter(song => song.course_id === authenticatedCourse).map( song => 
+                              <li key={song.title} className = 'flex pb-4 flex-col md:flex-row items-start'>
+                                <p className="md:flex-[0_0_400px]">{song.title}</p>
+                                <a className="mx-5 md:block whitespace-nowrap text-blue-primary hover:underline" href={song.mp3} download>Song</a>
+                                <a className="mx-5 md:block whitespace-nowrap text-blue-primary hover:underline" href={song.lyrics} download>Lyrics</a>
+                              </li>
+                              )}
+                          </ul>
+                        </div>);
+                        case "activitysheets":
+                        return (
+                        <div className='pr-10 order-[2]'>
+                          <ul className = 'posts pt-10 pb-16'>
+                            {
+                              activities.filter(activity => activity.course_id === authenticatedCourse).map( activity => 
+                              <li key={activity.title} className = 'flex pb-4 flex-col md:flex-row items-start'>
+                                <p className="md:flex-[0_0_400px]">{activity.title}</p>
+                                <a className="mx-5 md:block whitespace-nowrap text-blue-primary hover:underline" href={activity.worksheet} download>Activity Sheet</a>
+                                <a className="mx-5 md:block whitespace-nowrap text-blue-primary hover:underline" href={activity.answers} download>Answers</a>
+                              </li>
+                              )}
+                          </ul>
+                        </div>);
+                        default:
+                          return (<div>Error</div>)
+                    }
+                  })()
+                  
+                )
+                }
 
                 <Downloadables course={cohort.slug} />
             </main>
