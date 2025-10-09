@@ -8,6 +8,7 @@ use App\Models\Cohort;
 use App\Models\Course;
 use App\Models\Song;
 use App\Models\Activity;
+use App\Models\Article;
 
 class CourseController extends Controller
 {
@@ -25,6 +26,7 @@ class CourseController extends Controller
         $courses = Course::all();
         $songs = Song::all();
         $activities = Activity::all();
+        $articles = Article::all();
 
         if (in_array($page, ['activitysheets', 'songs'])) {
             return Inertia::render('AuthPage', [
@@ -38,6 +40,7 @@ class CourseController extends Controller
 
         return Inertia::render('coursepage', [
             'course' => $cohort,
+            'articles' => $articles,
         ]);
     }
 }

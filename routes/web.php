@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Cohort;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\AboutSueController;
+use App\Http\Controllers\AboutBijouFrenchController;
 
 Route::get('/', function () {
     $cohorts = Cohort::all();
@@ -21,18 +23,12 @@ Route::get('/', function () {
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 
-// Matches /courses/minibijou and /courses/minibijou/songs etc.
 Route::get('/courses/{course}/{page?}', [CourseController::class, 'show'])
     ->where('page', 'activitysheets|songs')
     ->name('courses.show');
 
-Route::get('aboutbijoufrench', function () {
-    return Inertia::render('aboutbijoufrench');
-})->name('aboutbijoufrench');
-
-Route::get('aboutsue', function () {
-    return Inertia::render('aboutsue');
-})->name('aboutsue');
+Route::get('/aboutsue', [AboutSueController::class, 'index'])->name('aboutsue.index');
+Route::get('/aboutbijoufrench', [AboutBijouFrenchController::class, 'index'])->name('aboutbijoufrench.index');
 
 Route::get('testHome', function () {
     return Inertia::render('testHome');

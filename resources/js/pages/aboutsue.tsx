@@ -3,7 +3,15 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 
-export default function aboutsue() {
+type ArticlesProps = {
+  articles: {
+    title: string
+    slug: string
+    text: string
+  }[]
+}
+
+export default function aboutsue({articles}:ArticlesProps) {
   const { auth } = usePage<SharedData>().props;
 
   return (
@@ -11,6 +19,12 @@ export default function aboutsue() {
       <Header name="About Sue" />
 
       <div className="mx-auto max-w-[1200px] px-2 py-10 font-noah text-lg">
+        <div className="max-w-[890px] prose" dangerouslySetInnerHTML={{
+      __html: articles.find((c) => c.slug === 'aboutsue')?.text || '',
+    }}></div>
+      </div>
+
+      {/*<div className="mx-auto max-w-[1200px] px-2 py-10 font-noah text-lg">
         <div className="max-w-[890px] prose">
           <div>
             <h2 className="pb-5">My Story</h2>
@@ -32,7 +46,7 @@ export default function aboutsue() {
             <p className="pb-5">October 2022</p>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       <Footer />
     </div>

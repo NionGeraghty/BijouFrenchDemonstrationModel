@@ -9,9 +9,14 @@ type CoursePageProps = {
     title: string;
     slug: string;
   };
+  articles: {
+    title: string
+    slug: string
+    text: string
+  }[];
 };
 
-export default function CoursePage({course}: CoursePageProps) {
+export default function CoursePage({course, articles}: CoursePageProps) {
     const { auth } = usePage<SharedData>().props;
 
     return (
@@ -19,8 +24,10 @@ export default function CoursePage({course}: CoursePageProps) {
             <Header name={course.title} /> {/*Change dynamically*/}
             <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
                 <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
-                    <div className="max-w-[890px] prose">
-                    </div>Text goes here</div> {/*Change dynamically*/}
+                    <div className="max-w-[890px] prose" dangerouslySetInnerHTML={{
+                    __html: articles.find((c) => c.slug === course.slug)?.text || '',
+                    }}>
+                    </div></div>
 
                 <Downloadables course={course.slug} /> {/*Change dynamically*/}
             </main>

@@ -3,7 +3,15 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 
-export default function aboutbijoufrench() {
+type ArticlesProps = {
+  articles: {
+    title: string
+    slug: string
+    text: string
+  }[]
+}
+
+export default function aboutbijoufrench({articles}:ArticlesProps) {
   const { auth } = usePage<SharedData>().props;
 
   return (
@@ -11,7 +19,11 @@ export default function aboutbijoufrench() {
       <Header name="About Bijou French" />
 
       <div className="mx-auto max-w-[1200px] px-2 py-10 font-noah text-lg">
-        <div className="max-w-[890px] prose"><div>
+        <div className="max-w-[890px] prose" dangerouslySetInnerHTML={{
+      __html: articles.find((c) => c.slug === 'aboutbijoufrench')?.text || '',
+    }}>
+          
+          {/*<div>
           <p className="pb-5"><strong>The course</strong></p>
           <p className="pb-5">Bijou French is a fun, dynamic French course for primary school children, created by a qualified teacher with many years’ experience teaching children in this age range. The course is split into 3 levels: Mini Bijou for children in years 1-2, Petit Bijou for children in years 3-4 and Top Bijou for children in years 5-6. The Mini Bijou and Petit Bijou children will attend weekly breakfast or lunchtime clubs at school, on a day to be arranged with the school. The Top Bijou children will attend clubs run during the school holidays.</p>
           <p className="pb-5">As well as face-to-face lessons, the children will have the chance to consolidate and extend their learning using the following resources available on the website:</p>
@@ -54,7 +66,7 @@ export default function aboutbijoufrench() {
           <p className="pb-5">Please email me for further information or to book your free 30 minute consultation: <u><a href="mailto:susannahbackley@gmail.com">susannahbackley@gmail.com</a></u></p>
           <p className="pb-5">A bientôt,</p>
           <p className="pb-5">Sue</p>
-        </div>
+        </div>*/}
         </div>
       </div>
 
