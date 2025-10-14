@@ -6,6 +6,8 @@ use App\Models\Cohort;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AboutSueController;
 use App\Http\Controllers\AboutBijouFrenchController;
+use App\Http\Controllers\SongsController;
+use App\Http\Controllers\ActivitiesController;
 
 Route::get('/', function () {
     $cohorts = Cohort::all();
@@ -23,12 +25,14 @@ Route::get('/', function () {
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 
-Route::get('/courses/{course}/{page?}', [CourseController::class, 'show'])
-    ->where('page', 'activitysheets|songs')
-    ->name('courses.show');
+//Route::get('/courses/{course}/{page?}', [CourseController::class, 'show'])
+//    ->where('page', 'activitysheets|songs')
+//    ->name('courses.show');
 
 Route::get('/aboutsue', [AboutSueController::class, 'index'])->name('aboutsue.index');
 Route::get('/aboutbijoufrench', [AboutBijouFrenchController::class, 'index'])->name('aboutbijoufrench.index');
+Route::get('/courses/{course}/songs', [SongsController::class, 'show'])->name('songs.show');
+Route::get('/courses/{course}/activities', [ActivitiesController::class, 'show'])->name('activities.show');
 
 Route::get('testHome', function () {
     return Inertia::render('testHome');
