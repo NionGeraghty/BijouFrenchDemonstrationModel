@@ -13,18 +13,19 @@ type AuthPageProps = {
     slug: string;
   };
   courses:{
+    id: number;
     title: string;
     access_code: string;
   }[];
   songs:{
     title: string;
-    course_id: string;
+    course_id: number;
     mp3: string;
     lyrics: string;
   }[];
   activities:{
     title: string;
-    course_id: string;
+    course_id: number;
     worksheet: string;
     answers: string;
   }[];
@@ -34,14 +35,14 @@ export default function AuthPage({cohort, courses, songs, activities}:AuthPagePr
   const { course, page } = usePage<{ course: string; page: string }>().props;
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
-  const [authenticatedCourse, setAuthenticatedCourse] = useState<string | null>(null);
+  const [authenticatedCourse, setAuthenticatedCourse] = useState<number | null>(null);
 
   const handleClick = () =>{
     const match = courses.find(c => c.access_code === password);
 
     if (match){
         setAuthenticated(true);
-        setAuthenticatedCourse(match.title);
+        setAuthenticatedCourse(match.id);
     }
     else{
         setPassword("");

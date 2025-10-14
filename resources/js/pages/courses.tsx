@@ -6,14 +6,14 @@ import Header from '@/components/header';
 //import petitBijou from '@/images/petit-bijou.png';
 
 type CoursesProps = {
-  courses: {
+  cohorts: {
     title: string
     slug: string
     image: string
   }[]
 }
 
-export default function Courses({courses}: CoursesProps) {
+export default function Courses({cohorts}: CoursesProps) {
     const { auth } = usePage<SharedData>().props;
 
   return (
@@ -23,10 +23,10 @@ export default function Courses({courses}: CoursesProps) {
       <Header name="Courses" />
 
       <div className="flex flex-1 flex-col sm:flex-row items-center justify-around py-10">
-        { courses.map(course => 
-        <div key={course.slug}>
-          <Link href={"courses/" + course.slug}><img width="150" height="150" alt={course.title} src={course.image}></img></Link>
-          <span className='flex justify-center text-bold text-3xl pt-5'>{course.title}</span>
+        { cohorts.map(cohort => 
+        <div key={cohort.slug}>
+          <Link href={"courses/" + cohort.slug}><img width="150" height="150" alt={cohort.title} src={cohort.image}></img></Link>
+          <span className='flex justify-center text-bold text-3xl pt-5'>{cohort.title}</span>
           </div>) }
       </div>
 

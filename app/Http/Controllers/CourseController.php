@@ -16,7 +16,7 @@ class CourseController extends Controller
         $cohorts = Cohort::all();
 
         return Inertia::render('courses',[
-            'courses'=> $cohorts,
+            'cohorts'=> $cohorts,
         ]);
     }
 
@@ -39,7 +39,7 @@ class CourseController extends Controller
         }
 
         return Inertia::render('coursepage', [
-            'course' => $cohort,
+            'cohort' => $cohort,
             'articles' => $articles,
         ]);
     }

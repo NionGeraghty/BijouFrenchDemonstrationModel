@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import Downloadables from '@/components/downloadables';
 
 type CoursePageProps = {
-  course: {
+  cohort: {
     title: string;
     slug: string;
   };
@@ -16,20 +16,20 @@ type CoursePageProps = {
   }[];
 };
 
-export default function CoursePage({course, articles}: CoursePageProps) {
+export default function CoursePage({cohort, articles}: CoursePageProps) {
     const { auth } = usePage<SharedData>().props;
 
     return (
         <div className="flex flex-col min-h-screen" style={{ backgroundColor: "#FEF4F3" }}>
-            <Header name={course.title} /> {/*Change dynamically*/}
+            <Header name={cohort.title} /> {/*Change dynamically*/}
             <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
                 <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
                     <div className="max-w-[890px] prose" dangerouslySetInnerHTML={{
-                    __html: articles.find((c) => c.slug === course.slug)?.text || '',
+                    __html: articles.find((c) => c.slug === cohort.slug)?.text || '',
                     }}>
                     </div></div>
 
-                <Downloadables course={course.slug} /> {/*Change dynamically*/}
+                <Downloadables course={cohort.slug} /> {/*Change dynamically*/}
             </main>
 
             <Footer />
