@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+
+
 
 class Cohort extends Model
 {
@@ -13,15 +14,18 @@ class Cohort extends Model
         'image',
         'order_column',
         'active',
-        
+        'course_id',
+
     ];
 
     protected $casts = [
         'active' => 'boolean',
     ];
 
-    public function courses(): HasMany
+
+
+    public function course()
     {
-        return $this->hasMany(Course::class);
+        return $this->belongsTo(Course::class);
     }
 }

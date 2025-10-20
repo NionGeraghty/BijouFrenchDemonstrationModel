@@ -12,7 +12,7 @@ class Course extends Model
         'title',
         'access_code',
         'article_id',
-        'cohort_id',
+
         'reorder_games',
         'odd_one_out_games',
         'category_games',
@@ -33,12 +33,12 @@ class Course extends Model
         return $this->belongsTo(Article::class);
     }
 
-    public function cohort(): BelongsTo
+    public function cohort()
     {
-        return $this->belongsTo(Cohort::class);
+        return $this->hasOne(Cohort::class);
     }
 
-    public function activities(): HasMany
+    public function activities()
     {
         return $this->hasMany(Activity::class)->orderBy('order_column');
     }

@@ -20,35 +20,37 @@ class CohortsTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('cohorts')->delete();
-        
+
         \DB::table('cohorts')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id' => 1,
                 'title' => 'Petit Bijou',
                 'slug' => 'petitbijou',
                 'image' => '/images/petit-bijou.png',
                 'order_column' => 0,
+                "course_id" => 1,
                 'active' => 1,
                 'created_at' => '2025-08-20 12:56:46',
                 'updated_at' => '2025-08-20 12:56:46',
             ),
-            1 => 
+            1 =>
             array (
                 'id' => 2,
                 'title' => 'Mini Bijou',
                 'slug' => 'minibijou',
                 'image' => '/images/mini-bijou.png',
                 'order_column' => 0,
+                "course_id" => 2,
                 'active' => 1,
                 'created_at' => '2025-08-20 12:57:00',
                 'updated_at' => '2025-08-20 12:57:00',
             ),
         ));
-        
-        
+
+
     }
 }

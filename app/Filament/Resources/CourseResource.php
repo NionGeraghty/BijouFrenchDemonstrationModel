@@ -46,11 +46,7 @@ class CourseResource extends Resource
                             ->searchable()
                             ->preload()
                             ->nullable(),
-                        Components\Select::make('cohort_id')
-                            ->relationship('cohort', 'title')
-                            ->searchable()
-                            ->preload()
-                            ->nullable(),
+
                     ])
                     ->columns(2),
 
@@ -124,8 +120,7 @@ class CourseResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('cohort')
-                    ->relationship('cohort', 'title'),
+
                 Tables\Filters\TernaryFilter::make('games_active'),
             ])
             ->recordActions([

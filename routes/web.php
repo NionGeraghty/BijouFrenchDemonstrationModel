@@ -9,6 +9,7 @@ use App\Http\Controllers\AboutBijouFrenchController;
 use App\Http\Controllers\SongsController;
 use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\CoursePageController;
+use App\Http\Controllers\CourseActivitiesController;
 
 Route::get('/', function () {
     $cohorts = Cohort::all();
@@ -32,9 +33,11 @@ Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'
 
 Route::get('/aboutsue', [AboutSueController::class, 'index'])->name('aboutsue.index');
 Route::get('/aboutbijoufrench', [AboutBijouFrenchController::class, 'index'])->name('aboutbijoufrench.index');
-Route::get('/courses/{course}/songs', [SongsController::class, 'show'])->name('songs.show');
-Route::get('/courses/{course}/activities', [ActivitiesController::class, 'show'])->name('activities.show');
 Route::get('/courses/{course}', [CoursePageController::class, 'show'])->name('coursepage.show');
+
+// guarded
+Route::get('/courses/{cohort:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
+Route::get('/courses/{course}/songs', [SongsController::class, 'show'])->name('songs.show');
 
 Route::get('testHome', function () {
     return Inertia::render('testHome');

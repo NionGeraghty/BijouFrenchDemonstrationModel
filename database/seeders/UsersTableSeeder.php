@@ -14,12 +14,12 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('users')->delete();
-        
+
         \DB::table('users')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id' => 1,
                 'name' => 'michael',
@@ -30,19 +30,19 @@ class UsersTableSeeder extends Seeder
                 'created_at' => '2025-08-20 11:35:43',
                 'updated_at' => '2025-08-20 11:35:43',
             ),
-            1 => 
+            1 =>
             array (
                 'id' => 2,
                 'name' => 'ross',
                 'email' => 'ross@boost.dev',
                 'email_verified_at' => NULL,
-                'password' => '$2y$12$XQuSVe6o5mxfnSpx03KTdeCPYoxmmcRXlciPjBVDtmw80Fxk79dHi',
+                'password' => '$2y$12$XQuSVe6o5mxfnSpx03KTdeCPYoxmmcRXlciPjBVDtmw80Fxk79dHi', // guessme
                 'remember_token' => NULL,
                 'created_at' => '2025-08-20 13:20:54',
                 'updated_at' => '2025-08-20 13:20:54',
             ),
         ));
-        
-        
+
+
     }
 }

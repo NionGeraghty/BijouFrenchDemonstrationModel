@@ -46,6 +46,12 @@ class CohortResource extends Resource
                     ->default(0),
                 Components\Toggle::make('active')
                     ->default(false),
+
+                Components\Select::make('course_id')
+                    ->relationship('course', 'title')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
             ]);
     }
 
@@ -66,9 +72,9 @@ class CohortResource extends Resource
                     ->label('Order'),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('courses_count')
-                    ->counts('courses')
-                    ->label('Courses'),
+                // Tables\Columns\TextColumn::make('courses_count')
+                //     ->counts('courses')
+                //     ->label('Courses'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

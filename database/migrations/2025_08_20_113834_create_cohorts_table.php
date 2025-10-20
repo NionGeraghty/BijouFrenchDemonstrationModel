@@ -18,6 +18,12 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('order_column');
             $table->boolean('active')->default(false);
+
+            $table->foreignId('course_id')
+                ->nullable()
+                ->constrained();
+
+
             $table->timestamps();
         });
     }

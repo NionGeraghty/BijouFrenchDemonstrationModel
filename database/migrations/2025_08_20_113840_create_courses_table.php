@@ -19,10 +19,7 @@ return new class extends Migration
                 ->nullable()
                 ->onDelete('set null')
                 ->constrained();
-            $table->foreignId('cohort_id')
-                ->nullable()
-                ->onDelete('set null')
-                ->constrained();
+
             $table->json('reorder_games')->nullable();
             $table->json('odd_one_out_games')->nullable();
             $table->json('category_games')->nullable();
