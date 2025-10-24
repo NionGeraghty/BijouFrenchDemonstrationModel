@@ -16,7 +16,17 @@ type ActivitiesProps = {
     }[];
 };
 
-function AuthGuard({ children, correctPassword, slug }: { children?: ReactNode; correctPassword: string; slug: string }) {
+type AuthGuardProps = {
+  children?: ReactNode;
+  correctPassword: string;
+  slug: string;
+  cohort: {
+    title: string;
+    slug: string;
+  };
+};
+
+function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) {
     const [password, setPassword] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
 
@@ -51,7 +61,10 @@ function AuthGuard({ children, correctPassword, slug }: { children?: ReactNode; 
 
     if (!authenticated) {
         return (
-            <>
+            <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
+                <Header name={cohort.title} />
+                <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
+            <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
                 This course requires an access code.
                 <br />
                 Please enter your code below
@@ -70,7 +83,11 @@ function AuthGuard({ children, correctPassword, slug }: { children?: ReactNode; 
                 <button onClick={handleClick} className="rounded bg-blue-500 px-6 py-2 text-center text-white transition hover:bg-blue-600">
                     Authenticate
                 </button>
-            </>
+            </div>
+            <Downloadables course={cohort.slug} />
+            </main>
+            <Footer />
+            </div>
         );
     }
 
@@ -79,7 +96,7 @@ function AuthGuard({ children, correctPassword, slug }: { children?: ReactNode; 
 
 export default function Activities({ cohort, activities }: ActivitiesProps) {
     return (
-        <AuthGuard correctPassword={'letmein'} slug={cohort.slug}>
+        <AuthGuard correctPassword={'letmein'} slug={cohort.slug} cohort={cohort}>
             <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
                 <Header name={cohort.title} /> {/*Change dynamically*/}
                 <main className="flex flex-col items-stretch justify-between pr-10 md:flex-row">

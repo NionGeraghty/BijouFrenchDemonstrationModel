@@ -14,7 +14,6 @@ class CoursePageController extends Controller
         $cohort = Cohort::where('slug', $cohort)->firstOrFail();
         $article = Article::where('slug', $cohort->slug)->firstOrFail();
 
-
         return Inertia::render('coursepage',[
             'cohort' => $cohort,
             'article' => $article,
