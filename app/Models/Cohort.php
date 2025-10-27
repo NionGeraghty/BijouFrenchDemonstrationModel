@@ -14,18 +14,14 @@ class Cohort extends Model
         'image',
         'order_column',
         'active',
-        'course_id',
-
     ];
 
     protected $casts = [
         'active' => 'boolean',
     ];
 
-
-
-    public function course()
+    public function courses()
     {
-        return $this->belongsTo(Course::class);
+        return $this->hasMany(Course::class);
     }
 }
