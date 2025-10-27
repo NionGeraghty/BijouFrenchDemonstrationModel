@@ -51,12 +51,14 @@ function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) 
     useEffect(() => {
         // check for a saved password in localStorage
         const savedPassword = localStorage.getItem(`auth_${slug}`);
+        if (savedPassword){
         if (savedPassword === correctPassword) {
             setAuthenticated(true);
             setPassword(savedPassword);
         } else {
             cleanUpSavedPassword();
         }
+    }
     }, []);
 
     if (!authenticated) {
@@ -104,7 +106,7 @@ export default function Activities({ cohort, activities }: ActivitiesProps) {
                         <div className="order-[2] mx-auto max-w-[1200px] px-2 py-10">Activities go here</div>
                         <div className="order-[2] pr-10">
                             <ul className="posts pt-10 pb-16">
-                                {activities.map((activity) => (
+                                {activities?.map((activity) => (
                                     <li key={activity.title} className="flex flex-col items-start pb-4 md:flex-row">
                                         <p className="md:flex-[0_0_400px]">{activity.title}</p>
                                         <a
