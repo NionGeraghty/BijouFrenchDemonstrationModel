@@ -8,6 +8,10 @@ type ActivitiesProps = {
     cohort: {
         title: string;
         slug: string;
+        active_course?: {
+            title: string;
+            access_code: string;
+        };
     };
     activities: {
         title: string;
@@ -98,7 +102,7 @@ function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) 
 
 export default function Activities({ cohort, activities }: ActivitiesProps) {
     return (
-        <AuthGuard correctPassword={'letmein'} slug={cohort.slug} cohort={cohort}>
+        <AuthGuard correctPassword={cohort.active_course?.access_code || ''} slug={cohort.slug} cohort={cohort}>
             <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
                 <Header name={cohort.title} /> {/*Change dynamically*/}
                 <main className="flex flex-col items-stretch justify-between pr-10 md:flex-row">

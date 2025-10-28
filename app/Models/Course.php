@@ -52,4 +52,17 @@ class Course extends Model
     {
         return $this->hasMany(GameAttempt::class);
     }
+
+    protected static function booted()
+    {
+        static::saving(function ($course) {
+            if ($course->active && $course->cohort_id) {
+                // Deactivate all other courses in the same cohort
+                static::where('cohort_id', $course->cohort_id)
+                    ->where('id', '!=', $course->id)
+                    ->update(['active' => false]);
+            }
+        });
+    }
+
 }

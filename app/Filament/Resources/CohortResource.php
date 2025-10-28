@@ -47,11 +47,11 @@ class CohortResource extends Resource
                 Components\Toggle::make('active')
                     ->default(false),
 
-                Components\Select::make('course_id')
-                    ->relationship('course', 'title')
-                    ->searchable()
-                    ->preload()
-                    ->nullable(),
+               // Components\Select::make('course_id')
+               //     ->relationship('course', 'title')
+               //    ->searchable()
+               //     ->preload()
+               //     ->nullable(),
             ]);
     }
 
@@ -96,11 +96,12 @@ class CohortResource extends Resource
     }
 
     public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
+{
+    return [
+        \App\Filament\Resources\CohortResource\RelationManagers\CoursesRelationManager::class,
+    ];
+}
+
 
     public static function getPages(): array
     {
@@ -111,4 +112,7 @@ class CohortResource extends Resource
             'edit' => Pages\EditCohort::route('/{record}/edit'),
         ];
     }
+
+        
+
 }

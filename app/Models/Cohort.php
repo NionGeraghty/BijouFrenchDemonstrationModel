@@ -24,4 +24,10 @@ class Cohort extends Model
     {
         return $this->hasMany(Course::class);
     }
+
+        public function activeCourse()
+    {
+        return $this->hasOne(Course::class)->where('active', true);
+    }
+
 }

@@ -9,7 +9,11 @@ use App\Models\Cohort;
 class ActivitiesController extends Controller
 {
     public function show($cohort){
-        $cohort = Cohort::where('slug', $cohort)->firstOrFail();
+        $cohort = Cohort::with([
+            'activeCourse' => function ($query) {
+                $query->select('id', 'title', 'access_code', 'cohort_id');
+            }
+        ])->where('slug', $slug)->firstOrFail();
 
         return Inertia::render('activities',[
             'cohort' => $cohort,
