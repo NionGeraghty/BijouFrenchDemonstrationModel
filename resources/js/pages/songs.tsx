@@ -8,6 +8,10 @@ type SongsProps = {
   cohort: {
     title: string;
     slug: string;
+    active_course?: {
+        title: string;
+        access_code: string;
+    };
   };
   songslist:{
     title: string;
@@ -98,7 +102,7 @@ function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) 
 
 export default function Songs({cohort,songslist}:SongsProps){
     return(
-      <AuthGuard correctPassword={'letmein'} slug={cohort.slug} cohort={cohort}>
+      <AuthGuard correctPassword={cohort.active_course?.access_code || ''} slug={cohort.slug} cohort={cohort}>
         <div className="flex flex-col min-h-screen" style={{ backgroundColor: "#FEF4F3" }}>
                     <Header name={cohort.title} /> {/*Change dynamically*/}
                     <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
@@ -126,4 +130,4 @@ export default function Songs({cohort,songslist}:SongsProps){
                 </div>
             </AuthGuard>
     )
-}
+} 

@@ -6,10 +6,9 @@ use App\Models\Cohort;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AboutSueController;
 use App\Http\Controllers\AboutBijouFrenchController;
-use App\Http\Controllers\SongsController;
-use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\CoursePageController;
 use App\Http\Controllers\CourseActivitiesController;
+use App\Http\Controllers\CourseSongsController;
 
 Route::get('/', function () {
     $cohorts = Cohort::all();
@@ -37,15 +36,15 @@ Route::get('/courses/{course}', [CoursePageController::class, 'show'])->name('co
 
 // guarded
 Route::get('/courses/{cohort:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
-Route::get('/courses/{course}/songs', [SongsController::class, 'show'])->name('songs.show');
+Route::get('/courses/{cohort:slug}/songs', [CourseSongsController::class, 'show'])->name('songs.show');
 
 Route::get('testHome', function () {
     return Inertia::render('testHome');
 })->name('testHome');
 
-Route::get('coursepage', function () {
-    return Inertia::render('coursepage');
-})->name('coursepage');
+//Route::get('coursepage', function () {
+//    return Inertia::render('coursepage');
+//})->name('coursepage');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
