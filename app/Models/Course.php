@@ -18,6 +18,7 @@ class Course extends Model
         'category_games',
         'match_up_games',
         'games_active',
+        'active',
     ];
 
     protected $casts = [
@@ -26,6 +27,7 @@ class Course extends Model
         'category_games' => 'array',
         'match_up_games' => 'array',
         'games_active' => 'boolean',
+        'active' => 'boolean',
     ];
 
     public function article(): BelongsTo

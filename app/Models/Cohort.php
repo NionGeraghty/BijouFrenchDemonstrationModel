@@ -13,11 +13,6 @@ class Cohort extends Model
         'slug',
         'image',
         'order_column',
-        'active',
-    ];
-
-    protected $casts = [
-        'active' => 'boolean',
     ];
 
     public function courses()
