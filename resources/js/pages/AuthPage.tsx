@@ -8,7 +8,7 @@ import { GitCommitHorizontal } from "lucide-react";
 import Courses from './courses';
 
 type AuthPageProps = {
-  cohort: {
+  group: {
     title: string;
     slug: string;
   };
@@ -31,7 +31,7 @@ type AuthPageProps = {
   }[];
 };
 
-export default function AuthPage({cohort, courses, songs, activities}:AuthPageProps) {
+export default function AuthPage({group, courses, songs, activities}:AuthPageProps) {
   const { course, page } = usePage<{ course: string; page: string }>().props;
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
@@ -52,7 +52,7 @@ export default function AuthPage({cohort, courses, songs, activities}:AuthPagePr
 
     return (
         <div className="flex flex-col min-h-screen" style={{ backgroundColor: "#FEF4F3" }}>
-            <Header name={cohort.title} />
+            <Header name={group.title} />
 
             <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
 
@@ -85,7 +85,7 @@ export default function AuthPage({cohort, courses, songs, activities}:AuthPagePr
                         <div className='pr-10 order-[2]'>
                           <ul className = 'posts pt-10 pb-16'>
                             {
-                              songs.filter(song => song.course_id === authenticatedCourse).map( song => 
+                              songs.filter(song => song.course_id === authenticatedCourse).map( song =>
                               <li key={song.title} className = 'flex pb-4 flex-col md:flex-row items-start'>
                                 <p className="md:flex-[0_0_400px]">{song.title}</p>
                                 <a className="mx-5 md:block whitespace-nowrap text-blue-primary hover:underline" href={song.mp3} download>Song</a>
@@ -99,7 +99,7 @@ export default function AuthPage({cohort, courses, songs, activities}:AuthPagePr
                         <div className='pr-10 order-[2]'>
                           <ul className = 'posts pt-10 pb-16'>
                             {
-                              activities.filter(activity => activity.course_id === authenticatedCourse).map( activity => 
+                              activities.filter(activity => activity.course_id === authenticatedCourse).map( activity =>
                               <li key={activity.title} className = 'flex pb-4 flex-col md:flex-row items-start'>
                                 <p className="md:flex-[0_0_400px]">{activity.title}</p>
                                 <a className="mx-5 md:block whitespace-nowrap text-blue-primary hover:underline" href={activity.worksheet} download>Activity Sheet</a>
@@ -112,11 +112,11 @@ export default function AuthPage({cohort, courses, songs, activities}:AuthPagePr
                           return (<div>Error</div>)
                     }
                   })()
-                  
+
                 )
                 }
 
-                <Downloadables course={cohort.slug} />
+                <Downloadables course={group.slug} />
             </main>
 
             <Footer />

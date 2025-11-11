@@ -5,10 +5,10 @@ import Header from '@/components/header';
 import { ReactNode, useEffect, useState } from 'react';
 
 type ActivitiesProps = {
-    cohort: {
+    group: {
         title: string;
         slug: string;
-        active_course?: {
+        course?: {
             title: string;
             access_code: string;
         };
@@ -24,13 +24,13 @@ type AuthGuardProps = {
   children?: ReactNode;
   correctPassword: string;
   slug: string;
-  cohort: {
+  group: {
     title: string;
     slug: string;
   };
 };
 
-function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) {
+function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
     const [password, setPassword] = useState('');
     const [authenticated, setAuthenticated] = useState(false);
 
@@ -68,7 +68,7 @@ function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) 
     if (!authenticated) {
         return (
             <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
-                <Header name={cohort.title} />
+                <Header name={group.title} />
                 <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
             <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
                 This course requires an access code.
@@ -90,7 +90,7 @@ function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) 
                     Authenticate
                 </button>
             </div>
-            <Downloadables course={cohort.slug} />
+            <Downloadables course={group.slug} />
             </main>
             <Footer />
             </div>
@@ -100,11 +100,11 @@ function AuthGuard({ children, correctPassword, slug, cohort }: AuthGuardProps) 
     return <>{children}</>;
 }
 
-export default function Activities({ cohort, activities }: ActivitiesProps) {
+export default function Activities({ group, activities }: ActivitiesProps) {
     return (
-        <AuthGuard correctPassword={cohort.active_course?.access_code || ''} slug={cohort.slug} cohort={cohort}>
+        <AuthGuard correctPassword={group.course?.access_code || ''} slug={group.slug} group={group}>
             <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
-                <Header name={cohort.title} /> {/*Change dynamically*/}
+                <Header name={group.title} /> {/*Change dynamically*/}
                 <main className="flex flex-col items-stretch justify-between pr-10 md:flex-row">
                     <div>
                         <div className="order-[2] mx-auto max-w-[1200px] px-2 py-10">Activities go here</div>
@@ -132,7 +132,7 @@ export default function Activities({ cohort, activities }: ActivitiesProps) {
                             </ul>
                         </div>
                     </div>
-                    <Downloadables course={cohort.slug} /> {/*Change dynamically*/}
+                    <Downloadables course={group.slug} /> {/*Change dynamically*/}
                 </main>
                 <Footer />
             </div>

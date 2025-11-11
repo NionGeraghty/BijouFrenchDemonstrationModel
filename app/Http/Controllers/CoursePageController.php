@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Cohort;
+use App\Models\Group;
 use App\Models\Article;
 
 class CoursePageController extends Controller
 {
-    public function show($cohort){
+    public function show($group){
 
-        $cohort = Cohort::where('slug', $cohort)->firstOrFail();
-        $article = Article::where('slug', $cohort->slug)->firstOrFail();
+        $group = Group::with(['course'])->where('slug', $group)->firstOrFail();
+        $article = Article::where('slug', $group->slug)->firstOrFail();
 
         return Inertia::render('coursepage',[
-            'cohort' => $cohort,
+            'group' => $group,
             'article' => $article,
         ]);
     }

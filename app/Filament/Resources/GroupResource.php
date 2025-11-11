@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CohortResource\Pages;
-use App\Models\Cohort;
+use App\Filament\Resources\GroupResource\Pages;
+use App\Models\Group;
+use App\Models\Course;
 use Filament\Forms\Components;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -17,11 +18,11 @@ use Filament\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Builder;
 use BackedEnum;
 
-class CohortResource extends Resource
+class GroupResource extends Resource
 {
-    protected static ?string $model = Cohort::class;
+    protected static ?string $model = Group::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?int $navigationSort = 1;
 
@@ -38,20 +39,18 @@ class CohortResource extends Resource
                     ->unique(ignoreRecord: true),
                 Components\FileUpload::make('image')
                     ->image()
-                    ->directory('cohorts')
+                    ->directory('groups')
                     ->nullable(),
                 Components\TextInput::make('order_column')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Components\Toggle::make('active')
-                    ->default(false),
-
-               // Components\Select::make('course_id')
-               //     ->relationship('course', 'title')
-               //    ->searchable()
-               //     ->preload()
-               //     ->nullable(),
+                Components\Select::make('course_id')
+                    ->label('Course')
+                    ->options(Course::all()->pluck('title', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
             ]);
     }
 
@@ -67,21 +66,20 @@ class CohortResource extends Resource
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->square(),
+                Tables\Columns\TextColumn::make('course.title')
+                    ->label('Active Course')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('order_column')
                     ->sortable()
                     ->label('Order'),
-                Tables\Columns\IconColumn::make('active')
-                    ->boolean(),
-                // Tables\Columns\TextColumn::make('courses_count')
-                //     ->counts('courses')
-                //     ->label('Courses'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('active'),
+                //
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -96,23 +94,19 @@ class CohortResource extends Resource
     }
 
     public static function getRelations(): array
-{
-    return [
-        \App\Filament\Resources\CohortResource\RelationManagers\CoursesRelationManager::class,
-    ];
-}
-
+    {
+        return [
+            //
+        ];
+    }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCohorts::route('/'),
-            'create' => Pages\CreateCohort::route('/create'),
-            'view' => Pages\ViewCohort::route('/{record}'),
-            'edit' => Pages\EditCohort::route('/{record}/edit'),
+            'index' => Pages\ListGroups::route('/'),
+            'create' => Pages\CreateGroup::route('/create'),
+            'view' => Pages\ViewGroup::route('/{record}'),
+            'edit' => Pages\EditGroup::route('/{record}/edit'),
         ];
     }
-
-        
-
 }

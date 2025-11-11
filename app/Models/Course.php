@@ -12,13 +12,11 @@ class Course extends Model
         'title',
         'access_code',
         'article_id',
-        'cohort_id',
         'reorder_games',
         'odd_one_out_games',
         'category_games',
         'match_up_games',
         'games_active',
-        'active',
     ];
 
     protected $casts = [
@@ -27,7 +25,6 @@ class Course extends Model
         'category_games' => 'array',
         'match_up_games' => 'array',
         'games_active' => 'boolean',
-        'active' => 'boolean',
     ];
 
     public function article(): BelongsTo
@@ -35,9 +32,9 @@ class Course extends Model
         return $this->belongsTo(Article::class);
     }
 
-    public function cohort(): BelongsTo
+    public function groups(): HasMany
     {
-        return $this->belongsTo(Cohort::class);
+        return $this->hasMany(Group::class);
     }
 
     public function activities()
@@ -55,16 +52,5 @@ class Course extends Model
         return $this->hasMany(GameAttempt::class);
     }
 
-    protected static function booted()
-    {
-        static::saving(function ($course) {
-            if ($course->active && $course->cohort_id) {
-                // Deactivate all other courses in the same cohort
-                static::where('cohort_id', $course->cohort_id)
-                    ->where('id', '!=', $course->id)
-                    ->update(['active' => false]);
-            }
-        });
-    }
 
 }

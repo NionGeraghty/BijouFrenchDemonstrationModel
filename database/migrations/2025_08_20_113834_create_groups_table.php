@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cohorts', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('image')->nullable();
-            $table->integer('order_column');
-            $table->boolean('active')->default(false);
-
+            $table->integer('order_column')->default(0);
             $table->foreignId('course_id')
                 ->nullable()
-                ->constrained();
-
-
+                ->constrained('courses')
+                ->onDelete('set null');
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cohorts');
+        Schema::dropIfExists('groups');
     }
 };
