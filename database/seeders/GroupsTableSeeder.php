@@ -6,11 +6,11 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 DB::statement('PRAGMA foreign_keys = OFF;'); // disable FK checks
-\App\Models\Cohort::truncate();              // empty the table
+\App\Models\Group::truncate();              // empty the table
 DB::statement('PRAGMA foreign_keys = ON;');  // re-enable FK checks
 
 
-class CohortsTableSeeder extends Seeder
+class GroupsTableSeeder extends Seeder
 {
 
     /**
@@ -22,9 +22,9 @@ class CohortsTableSeeder extends Seeder
     {
 
 
-        \DB::table('cohorts')->delete();
+        \DB::table('groups')->delete();
 
-        \DB::table('cohorts')->insert(array (
+        \DB::table('groups')->insert(array (
             0 =>
             array (
                 'id' => 1,
@@ -32,8 +32,7 @@ class CohortsTableSeeder extends Seeder
                 'slug' => 'petitbijou',
                 'image' => '/images/petit-bijou.png',
                 'order_column' => 0,
-
-
+                'course_id' => null,
                 'created_at' => '2025-08-20 12:56:46',
                 'updated_at' => '2025-08-20 12:56:46',
             ),
@@ -44,8 +43,7 @@ class CohortsTableSeeder extends Seeder
                 'slug' => 'minibijou',
                 'image' => '/images/mini-bijou.png',
                 'order_column' => 0,
-
-
+                'course_id' => null,
                 'created_at' => '2025-08-20 12:57:00',
                 'updated_at' => '2025-08-20 12:57:00',
             ),

@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Cohort;
+use App\Models\Group;
 
 class SongsController extends Controller
 {
-    public function show($cohort){
-        $cohort = Cohort::where('slug', $cohort)->firstOrFail();
+    public function show($group){
+        $group = Group::with(['course'])->where('slug', $group)->firstOrFail();
 
         return Inertia::render('songs',[
-            'cohort' => $cohort,
+            'group' => $group,
         ]);
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\CohortResource\Pages;
+namespace App\Filament\Resources\GroupResource\Pages;
 
-use App\Filament\Resources\CohortResource;
+use App\Filament\Resources\GroupResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditCohort extends EditRecord
+class EditGroup extends EditRecord
 {
-    protected static string $resource = CohortResource::class;
+    protected static string $resource = GroupResource::class;
 
     protected function getHeaderActions(): array
     {

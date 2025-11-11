@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Cohort;
+use App\Models\Group;
 use App\Models\Course;
 use App\Models\Song;
 use App\Models\Activity;
@@ -13,16 +13,16 @@ use App\Models\Article;
 class CourseController extends Controller
 {
     public function index(){
-        $cohorts = Cohort::all();
+        $groups = Group::with(['course'])->get();
 
         return Inertia::render('courses',[
-            'cohorts'=> $cohorts,
+            'groups'=> $groups,
         ]);
     }
 
-    public function show($cohort, $page = null)
+    public function show($group, $page = null)
     {
-        $cohort = Cohort::where('slug', $cohort)->firstOrFail();
+        $group = Group::with(['course'])->where('slug', $group)->firstOrFail();
         $courses = Course::all();
         $songs = Song::all();
         $activities = Activity::all();
@@ -30,7 +30,7 @@ class CourseController extends Controller
 
         if (in_array($page, ['activitysheets', 'songs'])) {
             return Inertia::render('AuthPage', [
-                'cohort'  => $cohort,
+                'group'  => $group,
                 'page'    => $page,
                 'courses' => $courses,
                 'songs'   => $songs,
@@ -39,7 +39,7 @@ class CourseController extends Controller
         }
 
         return Inertia::render('coursepage', [
-            'cohort' => $cohort,
+            'group' => $group,
             'articles' => $articles,
         ]);
     }

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Models\Cohort;
+use App\Models\Group;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AboutSueController;
 use App\Http\Controllers\AboutBijouFrenchController;
@@ -11,11 +11,11 @@ use App\Http\Controllers\CourseActivitiesController;
 use App\Http\Controllers\CourseSongsController;
 
 Route::get('/', function () {
-    $cohorts = Cohort::all();
+    $groups = Group::with(['course'])->get();
 
-        $courses = $cohorts->map(fn($cohort) =>[
-            'title' => $cohort->title,
-            'slug' => $cohort->slug,
+        $courses = $groups->map(fn($group) =>[
+            'title' => $group->title,
+            'slug' => $group->slug,
         ]
         );
 
@@ -35,8 +35,8 @@ Route::get('/aboutbijoufrench', [AboutBijouFrenchController::class, 'index'])->n
 Route::get('/courses/{course}', [CoursePageController::class, 'show'])->name('coursepage.show');
 
 // guarded
-Route::get('/courses/{cohort:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
-Route::get('/courses/{cohort:slug}/songs', [CourseSongsController::class, 'show'])->name('songs.show');
+Route::get('/courses/{group:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
+Route::get('/courses/{group:slug}/songs', [CourseSongsController::class, 'show'])->name('songs.show');
 
 Route::get('testHome', function () {
     return Inertia::render('testHome');

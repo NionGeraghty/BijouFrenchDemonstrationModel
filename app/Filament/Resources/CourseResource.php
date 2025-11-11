@@ -94,10 +94,9 @@ class CourseResource extends Resource
                 Tables\Columns\TextColumn::make('access_code')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('cohort.title')
-                    ->label('Cohort')
-                    ->sortable()
-                    ->toggleable(),
+                Tables\Columns\TextColumn::make('groups_count')
+                    ->counts('groups')
+                    ->label('Groups'),
                 Tables\Columns\TextColumn::make('article.title')
                     ->label('Article')
                     ->sortable()
