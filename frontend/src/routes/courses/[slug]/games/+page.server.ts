@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params: { slug }, locals: { services } }) => {
-	const course = await services.cohorts.getActiveCourseBySlud(slug);
+	const course = await services.groups.getActiveCourseBySlud(slug);
 	console.log('course', course.reorder_games);
 
 	return {

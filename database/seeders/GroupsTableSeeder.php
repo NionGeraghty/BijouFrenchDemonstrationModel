@@ -5,11 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-DB::statement('PRAGMA foreign_keys = OFF;'); // disable FK checks
-\App\Models\Group::truncate();              // empty the table
-DB::statement('PRAGMA foreign_keys = ON;');  // re-enable FK checks
-
-
 class GroupsTableSeeder extends Seeder
 {
 
@@ -21,8 +16,9 @@ class GroupsTableSeeder extends Seeder
     public function run()
     {
 
-
+        DB::statement('PRAGMA foreign_keys = OFF;'); // disable FK checks
         \DB::table('groups')->delete();
+        DB::statement('PRAGMA foreign_keys = ON');  // re-enable FK checks
 
         \DB::table('groups')->insert(array (
             0 =>

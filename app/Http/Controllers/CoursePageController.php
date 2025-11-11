@@ -9,10 +9,12 @@ use App\Models\Article;
 
 class CoursePageController extends Controller
 {
-    public function show($group){
+    public function show(string $slug){
 
-        $group = Group::with(['course'])->where('slug', $group)->firstOrFail();
-        $article = Article::where('slug', $group->slug)->firstOrFail();
+
+        $group = Group::with(['course'])->where('slug', $slug)->firstOrFail();
+
+        $article = $group->course->article;
 
         return Inertia::render('coursepage',[
             'group' => $group,

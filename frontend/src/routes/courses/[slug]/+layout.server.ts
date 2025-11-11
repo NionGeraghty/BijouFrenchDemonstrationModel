@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 export const load = (async ({ params: { slug }, locals: { services } }) => {
 	try {
 		const article = await services.articles.getArticleBySlug(slug);
-		const course = await services.cohorts.getActiveCourseBySlud(slug);
+		const course = await services.groups.getActiveCourseBySlud(slug);
 
 		console.log({ course });
 

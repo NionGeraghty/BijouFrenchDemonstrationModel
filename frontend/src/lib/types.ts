@@ -33,7 +33,7 @@ export type Document = {
 	url: string;
 };
 
-export type Cohort = {
+export type Group = {
 	id: number;
 	title: string;
 	slug: string;
@@ -48,7 +48,7 @@ export type Course = {
 	activities: Activity[];
 	songs: Song[];
 	article_id?: number;
-	cohort_id?: number;
+	group_id?: number;
 	access_code?: string;
 	games_active: boolean;
 	reorder_games?: ReorderGame[];

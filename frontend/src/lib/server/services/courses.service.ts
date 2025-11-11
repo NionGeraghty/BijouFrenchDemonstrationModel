@@ -39,7 +39,7 @@ export class CoursesServices extends APIService {
 			});
 	}
 
-	async attachToCohort(courseId: number, input: { cohort_id: number }): Promise<Course> {
+	async attachToGroup(courseId: number, input: { group_id: number }): Promise<Course> {
 		console.log('attach', courseId, input);
 
 		return this.patch(`/courses/${courseId}`, input)
@@ -49,10 +49,10 @@ export class CoursesServices extends APIService {
 			});
 	}
 
-	async detachFromCohort(courseId: number): Promise<Course> {
+	async detachFromGroup(courseId: number): Promise<Course> {
 		console.log('detach', courseId);
 
-		return this.patch(`/courses/${courseId}`, { cohort_id: null })
+		return this.patch(`/courses/${courseId}`, { group_id: null })
 			.then((res) => res?.data?.data || [])
 			.catch((err) => {
 				throw err?.response?.data;

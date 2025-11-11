@@ -1,18 +1,18 @@
 import { ActivitiesServices } from './activities.service';
 import { ArticlesServices } from './articles.service';
-import { CohortsServices } from './cohorts.service';
+import { GroupsServices } from './groups.service';
 import { CoursesServices } from './courses.service';
 import { SongsServices } from './songs.service';
 
 export class Services {
-	cohorts: CohortsServices;
+	groups: GroupsServices;
 	courses: CoursesServices;
 	articles: ArticlesServices;
 	activities: ActivitiesServices;
 	songs: SongsServices;
 
 	constructor() {
-		this.cohorts = new CohortsServices();
+		this.groups = new GroupsServices();
 		this.courses = new CoursesServices();
 		this.articles = new ArticlesServices();
 		this.activities = new ActivitiesServices();

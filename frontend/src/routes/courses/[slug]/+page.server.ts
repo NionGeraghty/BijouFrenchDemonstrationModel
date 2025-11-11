@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ params, locals: { services } }) => 
 	const { slug } = params as { slug: string };
 
 	try {
-		const course = await services.cohorts.getActiveCourseBySlud(slug);
+		const course = await services.groups.getActiveCourseBySlud(slug);
 		// if no article_id then throw
 		if (!course || !course.article_id) {
 			throw error(404, 'Not Found');

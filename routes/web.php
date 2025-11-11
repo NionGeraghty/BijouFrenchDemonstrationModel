@@ -32,7 +32,7 @@ Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'
 
 Route::get('/aboutsue', [AboutSueController::class, 'index'])->name('aboutsue.index');
 Route::get('/aboutbijoufrench', [AboutBijouFrenchController::class, 'index'])->name('aboutbijoufrench.index');
-Route::get('/courses/{course}', [CoursePageController::class, 'show'])->name('coursepage.show');
+Route::get('/courses/{slug}', [CoursePageController::class, 'show'])->name('coursepage.show');
 
 // guarded
 Route::get('/courses/{group:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
