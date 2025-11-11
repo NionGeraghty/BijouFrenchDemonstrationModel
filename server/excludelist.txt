@@ -1,7 +1,0 @@
-Makefile
-excludelist.txt
-node_modules
-public/storage
-storage/app/public
-vendor
-.env

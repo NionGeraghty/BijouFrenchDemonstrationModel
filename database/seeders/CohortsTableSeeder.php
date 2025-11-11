@@ -32,8 +32,8 @@ class CohortsTableSeeder extends Seeder
                 'slug' => 'petitbijou',
                 'image' => '/images/petit-bijou.png',
                 'order_column' => 0,
-                "course_id" => 1,
-                'active' => 1,
+
+
                 'created_at' => '2025-08-20 12:56:46',
                 'updated_at' => '2025-08-20 12:56:46',
             ),
@@ -44,8 +44,8 @@ class CohortsTableSeeder extends Seeder
                 'slug' => 'minibijou',
                 'image' => '/images/mini-bijou.png',
                 'order_column' => 0,
-                "course_id" => 2,
-                'active' => 1,
+
+
                 'created_at' => '2025-08-20 12:57:00',
                 'updated_at' => '2025-08-20 12:57:00',
             ),

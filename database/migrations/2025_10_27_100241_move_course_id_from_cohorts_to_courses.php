@@ -10,12 +10,14 @@ return new class extends Migration
 {
     Schema::table('cohorts', function (Blueprint $table) {
         if (Schema::hasColumn('cohorts', 'course_id')) {
+            $table->dropForeign(['course_id']);
             $table->dropColumn('course_id');
         }
     });
 
     Schema::table('courses', function (Blueprint $table) {
         if (!Schema::hasColumn('courses', 'cohort_id')) {
+
             $table->foreignId('cohort_id')->nullable()->constrained()->onDelete('cascade');
         }
     });

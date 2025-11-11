@@ -1,7 +1,0 @@
-/* Nova Card CSS */
-@tailwind components;
-@tailwind utilities;
-
-.live-courses__card-shadow:hover {
-    box-shadow: 0px 0px 5px #db5c54 !important;
-}
