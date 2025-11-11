@@ -19,6 +19,12 @@ export default function Downloadables({ course }: Props) {
                 <Link className="mb-4 block" href={`/courses/${course}/songs`}>
                     <img src={songs} alt="Songs"></img>
                 </Link>
+                <Link
+                    className="mb-4 block rounded-lg bg-blue-500 px-6 py-3 text-center text-white transition hover:bg-blue-600"
+                    href={`/courses/${course}/games`}
+                >
+                    Games
+                </Link>
             </div>
         </div>
     );

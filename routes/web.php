@@ -9,6 +9,7 @@ use App\Http\Controllers\AboutBijouFrenchController;
 use App\Http\Controllers\CoursePageController;
 use App\Http\Controllers\CourseActivitiesController;
 use App\Http\Controllers\CourseSongsController;
+use App\Http\Controllers\CourseGamesController;
 
 Route::get('/', function () {
     $groups = Group::with(['course'])->get();
@@ -37,6 +38,7 @@ Route::get('/courses/{slug}', [CoursePageController::class, 'show'])->name('cour
 // guarded
 Route::get('/courses/{group:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
 Route::get('/courses/{group:slug}/songs', [CourseSongsController::class, 'show'])->name('songs.show');
+Route::get('/courses/{group:slug}/games', [CourseGamesController::class, 'show'])->name('games.show');
 
 Route::get('testHome', function () {
     return Inertia::render('testHome');

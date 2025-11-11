@@ -54,34 +54,107 @@ class CourseResource extends Resource
                 Section::make('Games Configuration')
                     ->schema([
                         Components\Toggle::make('games_active')
+                            ->label('Games Active')
                             ->default(false)
-                            ->live(),
-                        Components\KeyValue::make('reorder_games')
+                            ->live()
+                            ->columnSpanFull(),
+
+                        Components\Repeater::make('reorder_games')
                             ->label('Reorder Games')
-                            ->keyLabel('Game Name')
-                            ->valueLabel('Configuration')
-                            ->nullable(),
+                            ->schema([
+                                Components\TextInput::make('question')
+                                    ->label('Question')
+                                    ->helperText('Scrambled text - No capital letters!')
+                                    ->required()
+                                    ->columnSpanFull(),
+                                Components\TextInput::make('solution')
+                                    ->label('Solution')
+                                    ->helperText('Correct order - No capital letters!')
+                                    ->required()
+                                    ->columnSpanFull(),
+                                Components\TextInput::make('hint')
+                                    ->label('Hint')
+                                    ->helperText('Optional')
+                                    ->columnSpanFull(),
+                            ])
+                            ->itemLabel(fn (array $state): ?string => $state['question'] ?? 'New game')
+                            ->collapsed()
+                            ->cloneable()
+                            ->collapsible()
+                            ->defaultItems(0)
+                            ->columnSpanFull(),
 
-                        Components\KeyValue::make('odd_one_out_games')
+                        Components\Repeater::make('odd_one_out_games')
                             ->label('Odd One Out Games')
-                            ->keyLabel('Game Name')
-                            ->valueLabel('Configuration')
-                            ->nullable(),
+                            ->schema([
+                                Components\Textarea::make('question')
+                                    ->label('Question')
+                                    ->helperText('One option per line')
+                                    ->required()
+                                    ->rows(4)
+                                    ->columnSpanFull(),
+                                Components\TextInput::make('solution')
+                                    ->label('Solution')
+                                    ->helperText('Which one is the odd one out?')
+                                    ->required()
+                                    ->columnSpanFull(),
+                                Components\TextInput::make('hint')
+                                    ->label('Hint')
+                                    ->helperText('Optional')
+                                    ->columnSpanFull(),
+                            ])
+                            ->itemLabel(fn (array $state): ?string => $state['solution'] ?? 'New game')
+                            ->collapsed()
+                            ->cloneable()
+                            ->collapsible()
+                            ->defaultItems(0)
+                            ->columnSpanFull(),
 
-                        Components\KeyValue::make('category_games')
+                        Components\Repeater::make('category_games')
                             ->label('Category Games')
-                            ->keyLabel('Game Name')
-                            ->valueLabel('Configuration')
-                            ->nullable(),
+                            ->schema([
+                                Components\Textarea::make('game')
+                                    ->label('Game')
+                                    ->helperText('One option per line. Use the format word:category for each line')
+                                    ->required()
+                                    ->rows(6)
+                                    ->columnSpanFull(),
+                                Components\TextInput::make('hint')
+                                    ->label('Hint')
+                                    ->helperText('Optional')
+                                    ->columnSpanFull(),
+                            ])
+                            ->itemLabel(fn (array $state): ?string => 'Category Game ' . ($state['hint'] ?? ''))
+                            ->collapsed()
+                            ->cloneable()
+                            ->collapsible()
+                            ->defaultItems(0)
+                            ->columnSpanFull(),
 
-                        Components\KeyValue::make('match_up_games')
+                        Components\Repeater::make('match_up_games')
                             ->label('Match Up Games')
-                            ->keyLabel('Game Name')
-                            ->valueLabel('Configuration')
-                            ->nullable(),
+                            ->schema([
+                                Components\Textarea::make('game')
+                                    ->label('Game')
+                                    ->helperText('One option per line. Use the format question:answer for each line.')
+                                    ->required()
+                                    ->rows(6)
+                                    ->columnSpanFull(),
+                                Components\TextInput::make('hint')
+                                    ->label('Hint')
+                                    ->helperText('Optional')
+                                    ->columnSpanFull(),
+                            ])
+                            ->itemLabel(fn (array $state): ?string => 'Match Up Game ' . ($state['hint'] ?? ''))
+                            ->collapsed()
+                            ->cloneable()
+                            ->collapsible()
+                            ->defaultItems(0)
+                            ->columnSpanFull(),
 
                     ])
-                    ->collapsible(),
+                    ->collapsible()
+                    ->collapsed(),
             ])->columns(1);
     }
 
@@ -149,6 +222,7 @@ class CourseResource extends Resource
             'create' => Pages\CreateCourse::route('/create'),
             'view' => Pages\ViewCourse::route('/{record}'),
             'edit' => Pages\EditCourse::route('/{record}/edit'),
+            'games' => Pages\ManageGames::route('/{record}/games'),
         ];
     }
 }
