@@ -14,7 +14,9 @@ class CoursePageController extends Controller
 
         $group = Group::with(['course'])->where('slug', $slug)->firstOrFail();
 
-        $article = $group->course->article;
+        $article = Article::where('slug', $slug)->firstOrFail();
+
+        // dd($group, $article);
 
         return Inertia::render('coursepage',[
             'group' => $group,
