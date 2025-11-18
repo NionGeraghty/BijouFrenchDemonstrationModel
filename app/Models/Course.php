@@ -12,6 +12,8 @@ class Course extends Model
         'title',
         'access_code',
         'article_id',
+        'group_id',
+        'active',
         'reorder_games',
         'odd_one_out_games',
         'category_games',
@@ -19,9 +21,12 @@ class Course extends Model
         'games_active',
     ];
 
+
     protected $casts = [
         'games_active' => 'boolean',
+        'active' => 'boolean', // add this
     ];
+
 
     /**
      * Transform game data from Filament's flat structure to the nested structure
@@ -136,9 +141,9 @@ class Course extends Model
         return $this->belongsTo(Article::class);
     }
 
-    public function groups(): HasMany
+    public function group()
     {
-        return $this->hasMany(Group::class);
+        return $this->belongsTo(Group::class);
     }
 
     public function activities()
@@ -156,5 +161,15 @@ class Course extends Model
         return $this->hasMany(GameAttempt::class);
     }
 
+    protected static function booted()
+    {
+        static::saving(function ($course) {
+            if ($course->active && $course->group_id) {
+                static::where('group_id', $course->group_id)
+                    ->where('id', '!=', $course->id)
+                    ->update(['active' => false]);
+            }
+        });
+    }
 
 }

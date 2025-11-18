@@ -8,7 +8,7 @@ type ActivitiesProps = {
     group: {
         title: string;
         slug: string;
-        course?: {
+        activeCourse?: {
             title: string;
             access_code: string;
         };
@@ -102,7 +102,7 @@ function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
 
 export default function Activities({ group, activities }: ActivitiesProps) {
     return (
-        <AuthGuard correctPassword={group.course?.access_code || ''} slug={group.slug} group={group}>
+        <AuthGuard correctPassword={group.activeCourse?.access_code || ''} slug={group.slug} group={group}>
             <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
                 <Header name={group.title} /> {/*Change dynamically*/}
                 <main className="flex flex-col items-stretch justify-between pr-10 md:flex-row">

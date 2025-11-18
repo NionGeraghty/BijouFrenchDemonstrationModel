@@ -33,26 +33,49 @@ class GroupResource extends Resource
                 Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+
                 Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
+
                 Components\FileUpload::make('image')
                     ->image()
                     ->directory('groups')
                     ->nullable(),
+
                 Components\TextInput::make('order_column')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Components\Select::make('course_id')
-                    ->label('Course')
-                    ->options(Course::all()->pluck('title', 'id'))
+
+                Components\Select::make('active_course_id')
+                    ->label('Active Course')
+                    ->options(function ($record) {
+                        // Only show courses for this group
+                        if ($record) {
+                            return $record->courses->pluck('title', 'id');
+                        }
+                        return [];
+                    })
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        // Set the selected course as active
+                        Course::query()->where('group_id', $state)->update(['active' => false]);
+                        if ($state) {
+                            $course = Course::find($state);
+                            if ($course) {
+                                $course->active = true;
+                                $course->save();
+                            }
+                        }
+                    })
+                    ->nullable()
                     ->searchable()
                     ->preload()
-                    ->nullable(),
+                    ->helperText('Select the active course for this group'),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -61,26 +84,29 @@ class GroupResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable()
                     ->sortable(),
+
                 Tables\Columns\ImageColumn::make('image')
                     ->square(),
-                Tables\Columns\TextColumn::make('course.title')
+
+                Tables\Columns\TextColumn::make('activeCourse.title')
                     ->label('Active Course')
                     ->searchable()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('order_column')
                     ->sortable()
                     ->label('Order'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
@@ -92,6 +118,7 @@ class GroupResource extends Resource
             ])
             ->defaultSort('order_column');
     }
+
 
     public static function getRelations(): array
     {

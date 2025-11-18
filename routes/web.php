@@ -12,18 +12,19 @@ use App\Http\Controllers\CourseSongsController;
 use App\Http\Controllers\CourseGamesController;
 
 Route::get('/', function () {
-    $groups = Group::with(['course'])->get();
+    $groups = Group::with('activeCourse')->get();
 
-        $courses = $groups->map(fn($group) =>[
-            'title' => $group->title,
-            'slug' => $group->slug,
-        ]
-        );
+    $courses = $groups->map(fn($group) => [
+        'title' => $group->title,
+        'slug' => $group->slug,
+        'active_course' => $group->activeCourse?->title, // optional
+    ]);
 
-    return Inertia::render('welcome',[
-            'courses'=> $courses,
-        ]);
+    return Inertia::render('welcome', [
+        'courses' => $courses,
+    ]);
 })->name('home');
+
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 

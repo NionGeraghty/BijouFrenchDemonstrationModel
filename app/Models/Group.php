@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Group extends Model
 {
@@ -11,11 +12,17 @@ class Group extends Model
         'slug',
         'image',
         'order_column',
-        'course_id',
     ];
 
-    public function course()
+    // Relation: Group has many courses
+    public function courses(): HasMany
     {
-        return $this->belongsTo(Course::class);
+        return $this->hasMany(Course::class);
+    }
+
+    // Optionally: get the active course
+    public function activeCourse()
+    {
+        return $this->hasOne(Course::class)->where('active', true);
     }
 }

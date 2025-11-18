@@ -12,11 +12,9 @@ class CoursePageController extends Controller
     public function show(string $slug){
 
 
-        $group = Group::with(['course'])->where('slug', $slug)->firstOrFail();
+        $group = Group::with(['activeCourse'])->where('slug', $slug)->firstOrFail();
 
         $article = Article::where('slug', $slug)->firstOrFail();
-
-        // dd($group, $article);
 
         return Inertia::render('coursepage',[
             'group' => $group,

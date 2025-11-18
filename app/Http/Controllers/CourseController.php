@@ -13,7 +13,7 @@ use App\Models\Article;
 class CourseController extends Controller
 {
     public function index(){
-        $groups = Group::with(['course'])->get();
+        $groups = Group::with(['activeCourse'])->get();
 
         return Inertia::render('courses',[
             'groups'=> $groups,
@@ -22,7 +22,7 @@ class CourseController extends Controller
 
     public function show($group, $page = null)
     {
-        $group = Group::with(['course'])->where('slug', $group)->firstOrFail();
+        $group = Group::with(['activeCourse'])->where('slug', $group)->firstOrFail();
         $courses = Course::all();
         $songs = Song::all();
         $activities = Activity::all();
