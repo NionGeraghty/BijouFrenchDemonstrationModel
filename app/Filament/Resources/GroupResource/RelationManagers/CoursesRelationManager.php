@@ -20,30 +20,22 @@ class CoursesRelationManager extends RelationManager
                     ->label('Course Title')
                     ->searchable(),
 
-                Tables\Columns\IconColumn::make('active')
-                    ->boolean()
-                    ->label('Active'),
+                Tables\Columns\TextColumn::make('access_code')
+                    ->label('Access Code')
+                    ->searchable(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Add Course'),
             ])
             ->actions([
-                Tables\Actions\Action::make('setActive')
-                    ->label('Set Active')
-                    ->icon('heroicon-o-check')
-                    ->color('success')
-                    ->requiresConfirmation()
-                    ->action(function (Course $record): void {
-
-                        // deactivate all courses in this group
-                        Course::where('group_id', $record->group_id)
-                            ->update(['active' => false]);
-
-                        // activate selected course
-                        $record->update(['active' => true]);
-                    }),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([]);
+            ->bulkActions([
+                Tables\BulkActionGroup::make([
+                    Tables\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }

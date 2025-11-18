@@ -10,8 +10,8 @@ use App\Models\Group;
 class CourseSongsController extends Controller
 {
     public function show(Group $group) {
-        $group->load('activeCourse');
-        $course = $group->activeCourse;
+        $group->load('course');
+        $course = $group->course;
 
         if (!$course) {
             abort(404, 'No course assigned to this group.');

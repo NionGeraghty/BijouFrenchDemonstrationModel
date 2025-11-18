@@ -48,13 +48,8 @@ class CourseResource extends Resource
                             ->preload()
                             ->nullable(),
 
-                        // Add this to select which group the course belongs to
-                        Components\Select::make('group_id')
-                            ->label('Group')
-                            ->relationship('group', 'title')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
+                        
+
 
                     ])
                     ->columns(2),
@@ -177,10 +172,12 @@ class CourseResource extends Resource
                 Tables\Columns\TextColumn::make('access_code')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('group.title')
+                Tables\Columns\TextColumn::make('groups.title')
                     ->label('Group')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->listWithLineBreaks()
+                    ->limitList(3),
                 Tables\Columns\TextColumn::make('article.title')
                     ->label('Article')
                     ->sortable()

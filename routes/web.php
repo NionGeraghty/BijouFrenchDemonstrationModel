@@ -12,12 +12,12 @@ use App\Http\Controllers\CourseSongsController;
 use App\Http\Controllers\CourseGamesController;
 
 Route::get('/', function () {
-    $groups = Group::with('activeCourse')->get();
+    $groups = Group::with('course')->get();
 
     $courses = $groups->map(fn($group) => [
         'title' => $group->title,
         'slug' => $group->slug,
-        'active_course' => $group->activeCourse?->title, // optional
+        'active_course' => $group->course?->title, // optional
     ]);
 
     return Inertia::render('welcome', [
@@ -26,7 +26,7 @@ Route::get('/', function () {
 })->name('home');
 
 
-Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+
 
 //Route::get('/courses/{course}/{page?}', [CourseController::class, 'show'])
 //    ->where('page', 'activitysheets|songs')
@@ -34,12 +34,18 @@ Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'
 
 Route::get('/aboutsue', [AboutSueController::class, 'index'])->name('aboutsue.index');
 Route::get('/aboutbijoufrench', [AboutBijouFrenchController::class, 'index'])->name('aboutbijoufrench.index');
-Route::get('/courses/{slug}', [CoursePageController::class, 'show'])->name('coursepage.show');
+
+
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+
+Route::get('/courses/{group:slug}', [CoursePageController::class, 'show'])->name('coursepage.show');
 
 // guarded
 Route::get('/courses/{group:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
 Route::get('/courses/{group:slug}/songs', [CourseSongsController::class, 'show'])->name('songs.show');
 Route::get('/courses/{group:slug}/games', [CourseGamesController::class, 'show'])->name('games.show');
+
+
 
 Route::get('testHome', function () {
     return Inertia::render('testHome');

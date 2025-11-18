@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Course extends Model
 {
@@ -12,8 +13,6 @@ class Course extends Model
         'title',
         'access_code',
         'article_id',
-        'group_id',
-        'active',
         'reorder_games',
         'odd_one_out_games',
         'category_games',
@@ -24,7 +23,6 @@ class Course extends Model
 
     protected $casts = [
         'games_active' => 'boolean',
-        'active' => 'boolean', // add this
     ];
 
 
@@ -124,7 +122,7 @@ class Course extends Model
     public function toArrayForApi(): array
     {
         $array = parent::toArray();
-        
+
         // Transform games back to nested format for API
         foreach (['reorder_games', 'odd_one_out_games', 'category_games', 'match_up_games'] as $gameType) {
             if (isset($this->attributes[$gameType])) {
@@ -132,7 +130,7 @@ class Course extends Model
                 $array[$gameType] = $games; // Already in nested format from database
             }
         }
-        
+
         return $array;
     }
 
@@ -141,10 +139,11 @@ class Course extends Model
         return $this->belongsTo(Article::class);
     }
 
-    public function group()
+    public function groups(): HasMany
     {
-        return $this->belongsTo(Group::class);
+        return $this->hasMany(Group::class);
     }
+
 
     public function activities()
     {
@@ -160,16 +159,4 @@ class Course extends Model
     {
         return $this->hasMany(GameAttempt::class);
     }
-
-    protected static function booted()
-    {
-        static::saving(function ($course) {
-            if ($course->active && $course->group_id) {
-                static::where('group_id', $course->group_id)
-                    ->where('id', '!=', $course->id)
-                    ->update(['active' => false]);
-            }
-        });
-    }
-
 }

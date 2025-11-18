@@ -8,7 +8,7 @@ type ActivitiesProps = {
     group: {
         title: string;
         slug: string;
-        activeCourse?: {
+        course?: {
             title: string;
             access_code: string;
         };
@@ -21,13 +21,13 @@ type ActivitiesProps = {
 };
 
 type AuthGuardProps = {
-  children?: ReactNode;
-  correctPassword: string;
-  slug: string;
-  group: {
-    title: string;
+    children?: ReactNode;
+    correctPassword: string;
     slug: string;
-  };
+    group: {
+        title: string;
+        slug: string;
+    };
 };
 
 function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
@@ -55,14 +55,14 @@ function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
     useEffect(() => {
         // check for a saved password in localStorage
         const savedPassword = localStorage.getItem(`auth_${slug}`);
-        if (savedPassword){
-        if (savedPassword === correctPassword) {
-            setAuthenticated(true);
-            setPassword(savedPassword);
-        } else {
-            cleanUpSavedPassword();
+        if (savedPassword) {
+            if (savedPassword === correctPassword) {
+                setAuthenticated(true);
+                setPassword(savedPassword);
+            } else {
+                cleanUpSavedPassword();
+            }
         }
-    }
     }, []);
 
     if (!authenticated) {
@@ -70,29 +70,29 @@ function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
             <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
                 <Header name={group.title} />
                 <main className="flex flex-col md:flex-row justify-between items-stretch pr-10">
-            <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
-                This course requires an access code.
-                <br />
-                Please enter your code below
-                <input
-                    type="password"
-                    value={password}
-                    placeholder="Enter code"
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            handleClick();
-                        }
-                    }}
-                    className="mb-4 w-full rounded-lg border border-black bg-white px-4 py-2 text-black"
-                />
-                <button onClick={handleClick} className="rounded bg-blue-500 px-6 py-2 text-center text-white transition hover:bg-blue-600">
-                    Authenticate
-                </button>
-            </div>
-            <Downloadables course={group.slug} />
-            </main>
-            <Footer />
+                    <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
+                        This course requires an access code.
+                        <br />
+                        Please enter your code below
+                        <input
+                            type="password"
+                            value={password}
+                            placeholder="Enter code"
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleClick();
+                                }
+                            }}
+                            className="mb-4 w-full rounded-lg border border-black bg-white px-4 py-2 text-black"
+                        />
+                        <button onClick={handleClick} className="rounded bg-blue-500 px-6 py-2 text-center text-white transition hover:bg-blue-600">
+                            Authenticate
+                        </button>
+                    </div>
+                    <Downloadables course={group.slug} />
+                </main>
+                <Footer />
             </div>
         );
     }
@@ -102,7 +102,7 @@ function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
 
 export default function Activities({ group, activities }: ActivitiesProps) {
     return (
-        <AuthGuard correctPassword={group.activeCourse?.access_code || ''} slug={group.slug} group={group}>
+        <AuthGuard correctPassword={group.course?.access_code || ''} slug={group.slug} group={group}>
             <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
                 <Header name={group.title} /> {/*Change dynamically*/}
                 <main className="flex flex-col items-stretch justify-between pr-10 md:flex-row">

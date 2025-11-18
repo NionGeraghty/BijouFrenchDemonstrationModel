@@ -10,7 +10,7 @@ class CourseGamesController extends Controller
 {
     public function show(Group $group)
     {
-        $group->load('activeCourse');
+        $group->load('course');
         $course = $group->course;
 
         if (!$course) {

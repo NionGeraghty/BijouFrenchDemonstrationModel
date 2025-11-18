@@ -13,8 +13,11 @@ type CoursesProps = {
   }[]
 }
 
-export default function Courses({groups}: CoursesProps) {
-    const { auth } = usePage<SharedData>().props;
+export default function Courses({ groups }: CoursesProps) {
+  const { auth } = usePage<SharedData>().props;
+
+  console.log({ groups });
+
 
   return (
 
@@ -23,11 +26,12 @@ export default function Courses({groups}: CoursesProps) {
       <Header name="Courses" />
 
       <div className="flex flex-1 flex-col sm:flex-row items-center justify-around py-10">
-        { groups.map(group =>
-        <div key={group.slug}>
-          <Link href={"courses/" + group.slug}><img width="150" height="150" alt={group.title} src={group.image}></img></Link>
-          <span className='flex justify-center text-bold text-3xl pt-5'>{group.title}</span>
-          </div>) }
+        {groups.map(group =>
+          <div key={group.slug}>
+            <Link href={"courses/" + group.slug}><img width="150" height="150" alt={group.title} src={group.image}></img>
+              <span className='flex justify-center text-bold text-3xl pt-5 text-black'>{group.title}</span>
+            </Link>
+          </div>)}
       </div>
 
       <Footer />

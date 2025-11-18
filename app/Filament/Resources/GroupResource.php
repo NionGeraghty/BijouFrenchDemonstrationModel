@@ -49,30 +49,13 @@ class GroupResource extends Resource
                     ->numeric()
                     ->default(0),
 
-                Components\Select::make('active_course_id')
-                    ->label('Active Course')
-                    ->options(function ($record) {
-                        // Only show courses for this group
-                        if ($record) {
-                            return $record->courses->pluck('title', 'id');
-                        }
-                        return [];
-                    })
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        // Set the selected course as active
-                        Course::query()->where('group_id', $state)->update(['active' => false]);
-                        if ($state) {
-                            $course = Course::find($state);
-                            if ($course) {
-                                $course->active = true;
-                                $course->save();
-                            }
-                        }
-                    })
+                Components\Select::make('course_id')
+                    ->label('Course')
+                    ->relationship('course', 'title')
                     ->nullable()
                     ->searchable()
                     ->preload()
-                    ->helperText('Select the active course for this group'),
+                    ->helperText('Select the course for this group'),
             ]);
     }
 
@@ -92,8 +75,8 @@ class GroupResource extends Resource
                 Tables\Columns\ImageColumn::make('image')
                     ->square(),
 
-                Tables\Columns\TextColumn::make('activeCourse.title')
-                    ->label('Active Course')
+                Tables\Columns\TextColumn::make('course.title')
+                    ->label('Course')
                     ->searchable()
                     ->sortable(),
 
