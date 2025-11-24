@@ -149,6 +149,7 @@ function ReorderGameComponent({ games }: { games: any[] }) {
     } else {
       alert("Incorrect. Try again.");
       handleReset();
+      setShowHint(true);
     }
   };
 
@@ -190,12 +191,12 @@ function ReorderGameComponent({ games }: { games: any[] }) {
         >
           Reset
         </button>
-        <button
+        {/*<button
           onClick={() => setShowHint(!showHint)}
           className="px-4 py-2 bg-yellow-200 rounded hover:bg-yellow-300"
         >
           {showHint ? "Hide Hint" : "Show Hint"}
-        </button>
+        </button>*/}
       </div>
 
       {/* Hint */}
