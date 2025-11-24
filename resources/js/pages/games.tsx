@@ -109,6 +109,9 @@ function ReorderGameComponent({ games }: { games: any[] }) {
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [availableWords, setAvailableWords] = useState<string[]>([]);
   const [showHint, setShowHint] = useState(false);
+  const [message, setMessage] = useState('Put words in correct order.');
+  const [nextButtonMessage, setNextButtonMessage] = useState('');
+  const [isCorrect, setIsCorrect] = useState(false);
 
   const currentGame = games[currentIndex];
 
@@ -124,37 +127,68 @@ function ReorderGameComponent({ games }: { games: any[] }) {
   if (!currentGame) return <p>No reorder games available.</p>;
 
   const handleWordClick = (word: string) => {
-    setSelectedWords([...selectedWords, word]);
-    setAvailableWords(availableWords.filter((w) => w !== word));
+    const newSelected = [...selectedWords, word];
+    const newAvailable = availableWords.filter((w) => w !== word);
+
+    setSelectedWords(newSelected);
+    setAvailableWords(newAvailable);
+
+    // If there are no words left, auto-check
+    if (newAvailable.length === 0) {
+      handleCheckAnswer(newSelected);
+    }
   };
+
+  const handleSelectedWordClick = (word: string) => {
+    setAvailableWords([...availableWords, word]);
+    setSelectedWords(selectedWords.filter((w) => w !== word));
+  }
 
   const handleReset = () => {
     setAvailableWords(currentGame.fields.question.split(" "));
     setSelectedWords([]);
+    setIsCorrect(false);
   };
 
-  const handleCheckAnswer = () => {
-    const answer = selectedWords.join(" ");
+  const handleCheckAnswer = (words = selectedWords) => {
+    const answer = words.join(" ");
     if (answer === currentGame.fields.solution) {
+        setIsCorrect(true);
       const nextIndex = currentIndex + 1;
       if (nextIndex < games.length) {
-        setCurrentIndex(nextIndex);
-        alert("Correct! Moving to the next question.");
+        setNextButtonMessage("Next Question");
+        setMessage("Well done!");
       } else {
-        alert("You finished all reorder games!");
-        setCurrentIndex(0);
+        setMessage("You finished all reorder games!");
+        setNextButtonMessage("Next Game");
       }
-      setSelectedWords([]);
       setShowHint(false);
     } else {
-      alert("Incorrect. Try again.");
+      setMessage("Incorrect. Try again!");
       handleReset();
       setShowHint(true);
     }
   };
 
+  const handleClickNext = () => {
+    const nextIndex = currentIndex + 1;
+    if(nextIndex < games.length){
+      setCurrentIndex(nextIndex);
+    }
+    else{
+      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+    setMessage("Put words in correct order.");
+    setSelectedWords([]);
+    setIsCorrect(false);
+  }
+
   return (
     <div className="space-y-4">
+      <div>
+        {message}
+      </div>
+
       {/* Available words */}
       <div className="flex flex-wrap gap-2">
         {availableWords.map((word, i) => (
@@ -171,26 +205,31 @@ function ReorderGameComponent({ games }: { games: any[] }) {
       {/* Selected words */}
       <div className="flex flex-wrap gap-2 mt-2 min-h-[2rem]">
         {selectedWords.map((word, i) => (
-          <span key={i} className="px-3 py-1 bg-green-200 rounded">
+          <button key={i} onClick={() => handleSelectedWordClick(word)} className="px-3 py-1 bg-green-200 rounded">
             {word}
-          </span>
+          </button>
         ))}
       </div>
 
       {/* Buttons */}
       <div className="space-x-2 mt-2">
-        <button
+        {/*<button
           onClick={handleCheckAnswer}
           className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
         >
           Check Answer
-        </button>
+        </button>*/}
         <button
           onClick={handleReset}
           className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
         >
           Reset
         </button>
+        {isCorrect && <button
+          onClick={() => handleClickNext()}
+          className="px-4 py-2 bg-yellow-200 rounded hover:bg-yellow-300">
+          {nextButtonMessage}
+        </button>}
         {/*<button
           onClick={() => setShowHint(!showHint)}
           className="px-4 py-2 bg-yellow-200 rounded hover:bg-yellow-300"
