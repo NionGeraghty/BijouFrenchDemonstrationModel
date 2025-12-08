@@ -20,7 +20,7 @@ export default function Welcome({courses}: CoursesProps) {
         <div className="Logo">
           <img src={flagLogo} width="250" height="110" alt="Bijou French" />
         </div>
-        <div className="flex flex-col lg:flex-row justify-between w-2/5">
+        <div className="flex flex-col lg:flex-row justify-between w-2/5 text-black">
           <Link href="/">Home</Link>
           <Link href="/courses">Courses</Link>
           <Link href="/aboutbijoufrench">About Bijou French</Link>
@@ -33,7 +33,7 @@ export default function Welcome({courses}: CoursesProps) {
             <img src={children} alt="Students" width="300" height="163" />
         </div>
 
-        <div className="basis-full lg:basis-2/5 text-center lg:text-left">
+        <div className="basis-full lg:basis-2/5 text-center lg:text-left text-black">
   <p className="text-center font-semibold text-2xl sm:text-3xl md:text-4xl text-[#aa837e] leading-none">
     Welcome to
   </p>
