@@ -104,6 +104,141 @@ function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
   return <>{children}</>;
 }
 
+function OddOneOutGameComponent({ games }: { games: any[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
+  const [availableWords, setAvailableWords] = useState<string[]>([]);
+  const [showHint, setShowHint] = useState(false);
+  const [message, setMessage] = useState('Find the odd one out.');
+  const [nextButtonMessage, setNextButtonMessage] = useState('');
+  const [isCorrect, setIsCorrect] = useState(false);
+
+  const currentGame = games[currentIndex];
+
+  // Initialize words whenever currentGame changes
+  useEffect(() => {
+    if (currentGame) {
+      setAvailableWords(currentGame.fields.question.split("\n"));
+      setSelectedWords([]);
+      setShowHint(false);
+    }
+  }, [currentGame]);
+
+  if (!currentGame) return <p>No Odd One Out games available.</p>;
+
+  const handleWordClick = (word: string) => {
+    const newSelected = [...selectedWords, word];
+    const newAvailable = availableWords.filter((w) => w !== word);
+
+    setSelectedWords(newSelected);
+    setAvailableWords(newAvailable);
+    handleCheckAnswer(newSelected);
+  };
+
+  const handleReset = () => {
+    setAvailableWords(currentGame.fields.question.split("\n"));
+    setSelectedWords([]);
+    setIsCorrect(false);
+  };
+
+  const handleCheckAnswer = (words = selectedWords) => {
+    const answer = words.join(" ");
+    if (answer === currentGame.fields.solution) {
+        setIsCorrect(true);
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < games.length) {
+        setNextButtonMessage("Next Question");
+        setMessage("Well done!");
+      } else {
+        setMessage("You finished all Odd One Out games!");
+        setNextButtonMessage("Next Game");
+      }
+      setShowHint(false);
+    } else {
+      setMessage("Incorrect. Try again!");
+      handleReset();
+      setShowHint(true);
+    }
+  };
+
+  const handleClickNext = () => {
+    const nextIndex = currentIndex + 1;
+    if(nextIndex < games.length){
+      setCurrentIndex(nextIndex);
+    }
+    else{
+      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+    setMessage("Put words in correct order.");
+    setSelectedWords([]);
+    setIsCorrect(false);
+  }
+
+  return (
+    <div className="space-y-4">
+      <div>
+        {message}
+      </div>
+
+      {/* Available words */}
+      <div className="flex flex-wrap gap-2">
+        {availableWords.map((word, i) => (
+          <button
+            key={i}
+            onClick={() => handleWordClick(word)}
+            className="px-3 py-1 bg-blue-200 rounded hover:bg-blue-300"
+          >
+            {word}
+          </button>
+        ))}
+      </div>
+
+      {/* Selected words */}
+      <div className="flex flex-wrap gap-2 mt-2 min-h-[2rem]">
+        {selectedWords.map((word, i) => (
+          <button key={i} className="px-3 py-1 bg-green-200 rounded">
+            {word}
+          </button>
+        ))}
+      </div>
+
+      {/* Buttons */}
+      <div className="space-x-2 mt-2">
+        {/*<button
+          onClick={handleCheckAnswer}
+          className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+        >
+          Check Answer
+        </button>*/}
+        <button
+          onClick={handleReset}
+          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Reset
+        </button>
+        {isCorrect && <button
+          onClick={() => handleClickNext()}
+          className="px-4 py-2 bg-yellow-200 rounded hover:bg-yellow-300">
+          {nextButtonMessage}
+        </button>}
+        {/*<button
+          onClick={() => setShowHint(!showHint)}
+          className="px-4 py-2 bg-yellow-200 rounded hover:bg-yellow-300"
+        >
+          {showHint ? "Hide Hint" : "Show Hint"}
+        </button>*/}
+      </div>
+
+      {/* Hint */}
+      {showHint && (
+        <p className="mt-2 text-sm text-gray-700">
+          Hint: {currentGame.fields.hint}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function ReorderGameComponent({ games }: { games: any[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -274,9 +409,10 @@ export default function Games({ group, gamesData }: GamesProps) {
               {/* Odd One Out Games */}
               <div className="rounded-lg bg-white p-6 shadow">
                 <h2 className="mb-4 text-xl font-semibold">Odd One Out Games</h2>
-                <pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
+                {/*<pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
                   {JSON.stringify(gamesData.odd_one_out_games, null, 2)}
-                </pre>
+                </pre>*/}
+                <OddOneOutGameComponent games={gamesData.odd_one_out_games} />
               </div>
 
               {/* Category Games */}
