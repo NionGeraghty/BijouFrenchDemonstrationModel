@@ -169,7 +169,7 @@ function OddOneOutGameComponent({ games }: { games: any[] }) {
     else{
       setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
     }
-    setMessage("Put words in correct order.");
+    const [message, setMessage] = useState('Find the odd one out.');
     setSelectedWords([]);
     setIsCorrect(false);
   }
@@ -383,6 +383,86 @@ function ReorderGameComponent({ games }: { games: any[] }) {
   );
 }
 
+function CategoriesGameComponent({ games }: { games: any[] }){
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [wordsAndCategories, setWordsAndCategories] = useState<string[]>([]);
+  const [availableWords, setAvailableWords] = useState<string[]>([]);
+  const [clickedIndex, setClickedIndex] = useState<number|null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [message, setMessage] = useState('Put words in the right category.');
+  const [selectedWord, setSelectedWord] = useState("");
+  const [nextButtonMessage, setNextButtonMessage] = useState('');
+  const [isCorrect, setIsCorrect] = useState(false);
+
+  const currentGame = games[currentIndex];
+
+  useEffect(() => {
+    if (currentGame) {
+      setWordsAndCategories(currentGame.fields.game.split("\n"));
+    }
+
+    const parsed = wordsAndCategories.map(item => {
+    const [word, category] = item.split(":").map(s => s.trim());
+    return { word, category };
+    });
+
+    setAvailableWords(parsed.map(p=>p.word));
+
+    const newCategories =[...new Set(parsed.map(p=>p.category))];
+    setCategories(newCategories);
+
+  }, [currentGame]);
+
+  if (!currentGame) return <p>No Category games available.</p>;
+
+  const handleWordClick = (word: string, i:number) => {
+    const currentClickedIndex = clickedIndex;
+    if(currentClickedIndex===i){
+      setClickedIndex(null);
+      setSelectedWord("");
+    }
+    else{
+      setClickedIndex(i);
+      setSelectedWord(word);
+    }
+  }
+
+  return (
+  <div className="space-y-4">
+      <div>
+        {message}
+      </div>
+
+    {/* Available words */}
+    <div className="flex flex-wrap gap-2">
+        {availableWords.map((word, i) => (
+          <button
+            key={i}
+            onClick={() => handleWordClick(word, i)}
+            className={clickedIndex===i ? "px-3 py-1 bg-yellow-300 rounded hover:bg-yellow-300":"px-3 py-1 bg-blue-200 rounded hover:bg-blue-300"}
+          >
+            {word}
+          </button>
+        ))}
+      </div>
+        
+      {/* Categories */}
+      <div className="flex flex-wrap gap-2 flex-col">
+        {categories.map((category, i) => (
+          <span 
+            key={i} 
+            className="px-2 py-1 bg-gray-200 rounded"
+          >
+            {category}
+          </span>
+        ))}
+      </div>
+
+
+  </div>
+  )
+}
+
 export default function Games({ group, gamesData }: GamesProps) {
   return (
     <AuthGuard correctPassword={group.course?.access_code || ''} slug={group.slug} group={group}>
@@ -421,6 +501,7 @@ export default function Games({ group, gamesData }: GamesProps) {
                 <pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
                   {JSON.stringify(gamesData.category_games, null, 2)}
                 </pre>
+                <CategoriesGameComponent games={gamesData.category_games} />
               </div>
 
               {/* Match Up Games */}
