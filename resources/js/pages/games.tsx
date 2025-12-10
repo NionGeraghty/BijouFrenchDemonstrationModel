@@ -391,27 +391,37 @@ function CategoriesGameComponent({ games }: { games: any[] }){
   const [categories, setCategories] = useState<string[]>([]);
   const [message, setMessage] = useState('Put words in the right category.');
   const [selectedWord, setSelectedWord] = useState("");
+  const [categoryWords, setCategoryWords] = useState<{[key:string]:string[]}>({});
   const [nextButtonMessage, setNextButtonMessage] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
 
   const currentGame = games[currentIndex];
 
   useEffect(() => {
-    if (currentGame) {
-      setWordsAndCategories(currentGame.fields.game.split("\n"));
-    }
+  if (!currentGame) return;
 
-    const parsed = wordsAndCategories.map(item => {
+  const lines: string[] = currentGame.fields.game.split("\n");
+  setWordsAndCategories(lines);
+
+  const parsed: { word: string; category: string }[] = lines.map((item: string) => {
     const [word, category] = item.split(":").map(s => s.trim());
     return { word, category };
-    });
+  });
 
-    setAvailableWords(parsed.map(p=>p.word));
+  setAvailableWords(parsed.map(p => p.word));
 
-    const newCategories =[...new Set(parsed.map(p=>p.category))];
-    setCategories(newCategories);
+  const newCategories: string[] = [...new Set(parsed.map(p => p.category))];
+  setCategories(newCategories);
 
-  }, [currentGame]);
+  const tempObject: { [key: string]: string[] } = newCategories.reduce((acc, cat) => {
+    acc[cat] = [];
+    return acc;
+  }, {} as { [key: string]: string[] });
+
+  setCategoryWords(tempObject);
+
+}, [currentGame]);
+
 
   if (!currentGame) return <p>No Category games available.</p>;
 
@@ -427,13 +437,25 @@ function CategoriesGameComponent({ games }: { games: any[] }){
     }
   }
 
+  const handleCategoryClick = (category: string) => {
+    if(selectedWord){
+      let tempCategoryWords = { ...categoryWords };
+      if (!tempCategoryWords[category].includes(selectedWord)) {
+        tempCategoryWords[category] = [...tempCategoryWords[category], selectedWord];
+        setCategoryWords(tempCategoryWords);
+        setAvailableWords(availableWords.filter(w => w !== selectedWord));
+        setClickedIndex(null);
+      }
+    }
+  }
+
   return (
   <div className="space-y-4">
       <div>
         {message}
       </div>
 
-    {/* Available words */}
+    {/* Available words */} 
     <div className="flex flex-wrap gap-2">
         {availableWords.map((word, i) => (
           <button
@@ -447,18 +469,29 @@ function CategoriesGameComponent({ games }: { games: any[] }){
       </div>
         
       {/* Categories */}
-      <div className="flex flex-wrap gap-2 flex-col">
+      <div className="flex flex-col gap-4">
         {categories.map((category, i) => (
-          <span 
-            key={i} 
-            className="px-2 py-1 bg-gray-200 rounded"
+          <div
+            key={i}
+            onClick={() => handleCategoryClick(category)}
+            className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded"
           >
-            {category}
-          </span>
+            <div className="font-bold">{category}</div>
+            <div className="flex gap-1 mt-1">
+              {categoryWords[category].map((word, j) => (
+                <div
+                  key={j}
+                  className="px-2 py-1 bg-gray-300 rounded"
+                >
+                  {word}
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 
-
+ 
   </div>
   )
 }
