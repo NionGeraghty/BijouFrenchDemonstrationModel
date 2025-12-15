@@ -394,6 +394,8 @@ function CategoriesGameComponent({ games }: { games: any[] }){
   const [categoryWords, setCategoryWords] = useState<{[key:string]:string[]}>({});
   const [nextButtonMessage, setNextButtonMessage] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
+  const [dragSource, setDragSource] = useState<string | null>(null);
+
 
   const currentGame = games[currentIndex];
 
@@ -420,10 +422,47 @@ function CategoriesGameComponent({ games }: { games: any[] }){
 
   setCategoryWords(tempObject);
 
-}, [currentGame]);
+  }, [currentGame]);
 
 
   if (!currentGame) return <p>No Category games available.</p>;
+
+  const handleReset = () => {
+
+    const lines: string[] = currentGame.fields.game.split("\n");
+
+    const parsed: { word: string; category: string }[] = lines.map((item: string) => {
+      const [word, category] = item.split(":").map(s => s.trim());
+      return { word, category };
+    });
+
+    setAvailableWords(parsed.map(p => p.word));
+
+    const resetCategoryWords = categories.reduce((acc, cat) => {
+      acc[cat] = [];
+      return acc;
+    }, {} as { [key: string]: string[] });
+
+    setCategoryWords(resetCategoryWords);
+    setSelectedWord("");
+    setClickedIndex(null);
+    setIsCorrect(false);
+  }
+
+  const handleClickNext = () => {
+    const nextIndex = currentIndex + 1;
+    if(nextIndex < games.length){
+      setCurrentIndex(nextIndex);
+    }
+    else{
+      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+    setMessage('Put words in the right category.');
+    
+    setSelectedWord("");
+    setClickedIndex(null);
+    setIsCorrect(false);
+  }
 
   const handleWordClick = (word: string, i:number) => {
     const currentClickedIndex = clickedIndex;
@@ -443,11 +482,40 @@ function CategoriesGameComponent({ games }: { games: any[] }){
       if (!tempCategoryWords[category].includes(selectedWord)) {
         tempCategoryWords[category] = [...tempCategoryWords[category], selectedWord];
         setCategoryWords(tempCategoryWords);
-        setAvailableWords(availableWords.filter(w => w !== selectedWord));
+        const newAvailable = availableWords.filter(w => w !== selectedWord);
+        setAvailableWords(newAvailable);
         setClickedIndex(null);
+
+        if (newAvailable.length === 0) {
+          handleCheckAnswer(tempCategoryWords);
+        }
       }
     }
   }
+
+  const handleCheckAnswer = (
+    userCategories: { [key: string]: string[] } = categoryWords
+  ) => {
+    const parsed = wordsAndCategories.map(item => {
+      const [word, category] = item.split(":").map(s => s.trim());
+      return { word, category };
+    });
+
+    const allCorrect = parsed.every(({ word, category }) => {
+      return userCategories[category]?.includes(word);
+    });
+
+    if (allCorrect) {
+      setIsCorrect(true);
+      setMessage("Well done!");
+      setNextButtonMessage("Next Question");
+    } else {
+      setIsCorrect(false);
+      setMessage("Some words are in the wrong category. Try again.");
+      handleReset();
+    }
+  };
+
 
   return (
   <div className="space-y-4">
@@ -456,23 +524,63 @@ function CategoriesGameComponent({ games }: { games: any[] }){
       </div>
 
     {/* Available words */} 
-    <div className="flex flex-wrap gap-2">
-        {availableWords.map((word, i) => (
-          <button
-            key={i}
-            onClick={() => handleWordClick(word, i)}
-            className={clickedIndex===i ? "px-3 py-1 bg-yellow-300 rounded hover:bg-yellow-300":"px-3 py-1 bg-blue-200 rounded hover:bg-blue-300"}
-          >
-            {word}
-          </button>
-        ))}
-      </div>
+    <div 
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={() => {
+        let tempCategoryWords = { ...categoryWords };
+        let tempAvailableWords = [...availableWords];
+        if (dragSource && dragSource !== "available") {
+          tempAvailableWords = [...tempAvailableWords, selectedWord];
+          setAvailableWords(tempAvailableWords);
+          tempCategoryWords[dragSource] = tempCategoryWords[dragSource].filter(w => w !== selectedWord);
+          setCategoryWords(tempCategoryWords);
+        }
+        setSelectedWord("");
+      }}
+      className="flex flex-wrap gap-2"
+    >
+      {availableWords.map((word, i) => (
+        <button
+          key={i}
+          draggable="true"
+          onDragStart={() => {
+            setSelectedWord(word);
+            setDragSource("available");
+          }}
+          onClick={() => handleWordClick(word, i)}
+          className={
+            clickedIndex === i || selectedWord === word
+              ? "px-3 py-1 bg-yellow-300 rounded hover:bg-yellow-300" // clicked or being dragged
+              : "px-3 py-1 bg-blue-200 rounded hover:bg-blue-300"      // normal
+          }
+        >
+          {word}
+        </button>
+      ))}
+    </div>
+
         
       {/* Categories */}
       <div className="flex flex-col gap-4">
         {categories.map((category, i) => (
           <div
             key={i}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => {
+              if(dragSource==="available")
+              {
+                handleCategoryClick(category);
+              }
+              else{
+                let tempCategoryWords = { ...categoryWords };
+                if (!tempCategoryWords[category].includes(selectedWord) && dragSource) {
+                  tempCategoryWords[category] = [...tempCategoryWords[category], selectedWord];
+                  tempCategoryWords[dragSource] = tempCategoryWords[dragSource].filter(w => w !== selectedWord);
+                  setCategoryWords(tempCategoryWords);
+                }
+              }
+              setSelectedWord("");
+            }}
             onClick={() => handleCategoryClick(category)}
             className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded"
           >
@@ -481,7 +589,16 @@ function CategoriesGameComponent({ games }: { games: any[] }){
               {categoryWords[category].map((word, j) => (
                 <div
                   key={j}
-                  className="px-2 py-1 bg-gray-300 rounded"
+                  draggable="true"
+                  onDragStart={()=>{
+                    setSelectedWord(word);
+                    setDragSource(category);
+                  }}
+                  className={
+                    selectedWord === word
+                      ? "px-2 py-1 bg-yellow-300 rounded" // being dragged → yellow
+                      : "px-2 py-1 bg-gray-300 rounded"   // normal
+                  }
                 >
                   {word}
                 </div>
@@ -490,7 +607,19 @@ function CategoriesGameComponent({ games }: { games: any[] }){
           </div>
         ))}
       </div>
-
+        <div>
+          <button
+          onClick={handleReset}
+          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Reset
+        </button>
+        {isCorrect && <button
+          onClick={() => handleClickNext()}
+          className="px-4 py-2 bg-yellow-200 rounded hover:bg-yellow-300">
+          {nextButtonMessage}
+        </button>}
+        </div>
  
   </div>
   )
