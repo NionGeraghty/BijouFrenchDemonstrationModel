@@ -383,6 +383,171 @@ function ReorderGameComponent({ games }: { games: any[] }) {
   );
 }
 
+function MatchUpGameComponent({games}: {games: any[]}){
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [message, setMessage] = useState('Match English to French');
+  const [matchedWords, setMatchedWords] = useState<string[]>([]);
+  const [englishWords, setEnglishWords] = useState<string[]>([]);
+  const [frenchWords, setFrenchWords] = useState<string[]>([]);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [nextButtonMessage, setNextButtonMessage] = useState('');
+  const [clickedIndex, setClickedIndex] = useState<number|null>(null);
+
+  const currentGame = games[currentIndex];
+
+  function shuffle(array:string[]) {
+  let currentIndex = array.length;
+
+  if(currentIndex === 0){
+    return [""];
+  }
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return(array);
+}
+
+  useEffect(() => {
+  if (!currentGame) return;
+
+  const lines: string[] = currentGame.fields.game.split("\n");
+  setMatchedWords(lines);
+
+  const parsed: { word: string; category: string }[] = lines.map((item: string) => {
+    const [word, category] = item.split(":").map(s => s.trim());
+    return { word, category };
+  });
+
+  let tempFrenchWords: string[] = lines.map((item:string) =>{
+    return (item.substring(0, item.indexOf(":")));
+  });
+  
+  //tempFrenchWords = shuffle(tempFrenchWords);
+
+  let tempEnglishWords: string[] = lines.map((item:string) =>{
+    return (item.substring(item.indexOf(":")+1));
+  });
+
+  tempEnglishWords = shuffle(tempEnglishWords);
+
+  setFrenchWords(tempFrenchWords);
+  setEnglishWords(tempEnglishWords);
+  
+  }, [currentGame]);
+
+  const handleWordClick = (i:number) => {
+    const currentClickedIndex = clickedIndex;
+    if(currentClickedIndex===i){
+      setClickedIndex(null);
+    }
+    else if (clickedIndex===null){
+      setClickedIndex(i);
+    }
+    else{
+      let tempArray = [...englishWords];
+      [tempArray[i], tempArray[clickedIndex]] = [tempArray[clickedIndex], tempArray[i]];
+      setEnglishWords(tempArray);
+      setClickedIndex(null);
+    }
+  }
+
+  const handleCheckAnswer = () => {
+    const tempEnglish = [...englishWords];
+    const tempFrench = [...frenchWords];
+
+    let potentialAnswer:string[] = [];
+
+    for(let i=0;i<tempEnglish.length;i++){
+      potentialAnswer.push(tempFrench[i]+":"+tempEnglish[i]);
+    }
+
+    const isMatch =
+      potentialAnswer.length === matchedWords.length &&
+      potentialAnswer.every((value, index) => value === matchedWords[index]);
+
+      setMessage("Not quite. Try again!");
+
+    if (isMatch) {
+      setIsCorrect(true);
+      setMessage("Well done!");
+      setNextButtonMessage("Next Question");
+    }
+  }
+
+  const handleClickNext = () => {
+    const nextIndex = currentIndex + 1;
+    if(nextIndex < games.length){
+      setCurrentIndex(nextIndex);
+    }
+    else{
+      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+    setMessage('Match English to French');
+    setIsCorrect(false);
+  }
+
+  return(
+  <div className="space-y-4">
+    <div>
+      {message}
+    </div>
+
+    {/*English Words*/}
+      <div className="flex flex-wrap gap-2 justify-evenly">
+        {englishWords.map((word, i) => (
+          <button
+            key={i}
+            onClick={() => handleWordClick(i)}
+            className={
+              clickedIndex === i
+                ? "px-3 py-1 bg-yellow-300 rounded hover:bg-yellow-300"
+                : "px-3 py-1 bg-blue-200 rounded hover:bg-blue-300"
+            }
+          >
+            {word}
+          </button>
+        ))}
+      </div>
+
+      {/*French Words*/}
+      <div className="flex flex-wrap gap-2 justify-evenly">
+        {frenchWords.map((word, i) => (
+          <button
+            key={i}
+            //onClick={() => handleWordClick(word)}
+            className="px-3 py-1 bg-blue-200 rounded hover:bg-blue-300"
+          >
+            {word}
+          </button>
+        ))}
+      </div>
+
+        <button
+          onClick={handleCheckAnswer}
+          className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+        >
+          Check Answer
+        </button>
+
+      {isCorrect && <button
+          onClick={() => handleClickNext()}
+          className="px-4 py-2 bg-yellow-200 rounded hover:bg-yellow-300">
+          {nextButtonMessage}
+        </button>}
+  </div>
+  )
+}
+
 function CategoriesGameComponent({ games }: { games: any[] }){
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wordsAndCategories, setWordsAndCategories] = useState<string[]>([]);
@@ -660,9 +825,9 @@ export default function Games({ group, gamesData }: GamesProps) {
               {/* Category Games */}
               <div className="rounded-lg bg-white p-6 shadow">
                 <h2 className="mb-4 text-xl font-semibold">Category Games</h2>
-                <pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
+                {/*<pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
                   {JSON.stringify(gamesData.category_games, null, 2)}
-                </pre>
+                </pre>*/}
                 <CategoriesGameComponent games={gamesData.category_games} />
               </div>
 
@@ -672,6 +837,7 @@ export default function Games({ group, gamesData }: GamesProps) {
                 <pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
                   {JSON.stringify(gamesData.match_up_games, null, 2)}
                 </pre>
+                <MatchUpGameComponent games = {gamesData.match_up_games} />
               </div>
             </div>
           </div>
