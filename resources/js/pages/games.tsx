@@ -104,7 +104,7 @@ function AuthGuard({ children, correctPassword, slug, group }: AuthGuardProps) {
   return <>{children}</>;
 }
 
-function OddOneOutGameComponent({ games }: { games: any[] }) {
+function OddOneOutGameComponent({ games, onComplete }: { games: any[]; onComplete: () => void; }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [availableWords, setAvailableWords] = useState<string[]>([]);
@@ -167,7 +167,7 @@ function OddOneOutGameComponent({ games }: { games: any[] }) {
       setCurrentIndex(nextIndex);
     }
     else{
-      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+      onComplete();
     }
     const [message, setMessage] = useState('Find the odd one out.');
     setSelectedWords([]);
@@ -239,7 +239,7 @@ function OddOneOutGameComponent({ games }: { games: any[] }) {
   );
 }
 
-function ReorderGameComponent({ games }: { games: any[] }) {
+function ReorderGameComponent({ games, onComplete }: { games: any[]; onComplete: () => void; }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [availableWords, setAvailableWords] = useState<string[]>([]);
@@ -311,7 +311,7 @@ function ReorderGameComponent({ games }: { games: any[] }) {
       setCurrentIndex(nextIndex);
     }
     else{
-      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+      onComplete();
     }
     setMessage("Put words in correct order.");
     setSelectedWords([]);
@@ -383,7 +383,7 @@ function ReorderGameComponent({ games }: { games: any[] }) {
   );
 }
 
-function MatchUpGameComponent({games}: {games: any[]}){
+function MatchUpGameComponent({games, onComplete}: {games: any[]; onComplete: () => void;}){
   const [currentIndex, setCurrentIndex] = useState(0);
   const [message, setMessage] = useState('Match English to French');
   const [matchedWords, setMatchedWords] = useState<string[]>([]);
@@ -476,11 +476,16 @@ function MatchUpGameComponent({games}: {games: any[]}){
       potentialAnswer.every((value, index) => value === matchedWords[index]);
 
       setMessage("Not quite. Try again!");
-
+    const nextIndex = currentIndex + 1;
     if (isMatch) {
       setIsCorrect(true);
       setMessage("Well done!");
-      setNextButtonMessage("Next Question");
+      if(nextIndex<games.length){
+        setNextButtonMessage("Next Question");
+      }
+      else{
+        setMessage("You finished every game! A winner is you!")
+      }
     }
   }
 
@@ -490,7 +495,7 @@ function MatchUpGameComponent({games}: {games: any[]}){
       setCurrentIndex(nextIndex);
     }
     else{
-      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+      onComplete();
     }
     setMessage('Match English to French');
     setIsCorrect(false);
@@ -548,7 +553,7 @@ function MatchUpGameComponent({games}: {games: any[]}){
   )
 }
 
-function CategoriesGameComponent({ games }: { games: any[] }){
+function CategoriesGameComponent({ games, onComplete }: { games: any[]; onComplete: () => void;}){
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wordsAndCategories, setWordsAndCategories] = useState<string[]>([]);
   const [availableWords, setAvailableWords] = useState<string[]>([]);
@@ -620,7 +625,7 @@ function CategoriesGameComponent({ games }: { games: any[] }){
       setCurrentIndex(nextIndex);
     }
     else{
-      setCurrentIndex(0); //Change to load next game later!!!!!!!!!!!!!!!!!!!!!!!!!
+      onComplete();
     }
     setMessage('Put words in the right category.');
     
@@ -672,8 +677,15 @@ function CategoriesGameComponent({ games }: { games: any[] }){
 
     if (allCorrect) {
       setIsCorrect(true);
-      setMessage("Well done!");
-      setNextButtonMessage("Next Question");
+      const nextIndex = currentIndex+1;
+      if(nextIndex<games.length){
+        setMessage("Well done!");
+        setNextButtonMessage("Next Question");
+      }
+      else{
+        setMessage("You finished all category games!");
+        setNextButtonMessage("Next Game");
+      }
     } else {
       setIsCorrect(false);
       setMessage("Some words are in the wrong category. Try again.");
@@ -791,6 +803,19 @@ function CategoriesGameComponent({ games }: { games: any[] }){
 }
 
 export default function Games({ group, gamesData }: GamesProps) {
+
+  const GAME_FLOW = [
+    "reorder",
+    "oddOneOut",
+    "categories",
+    "matchUp",
+  ] as const;
+
+  type GameType = typeof GAME_FLOW[number];
+
+  const [currentGameTypeIndex, setCurrentGameTypeIndex] = useState(0);
+  const currentGameType = GAME_FLOW[currentGameTypeIndex];
+
   return (
     <AuthGuard correctPassword={group.course?.access_code || ''} slug={group.slug} group={group}>
       <div className="flex min-h-screen flex-col text-black" style={{ backgroundColor: '#FEF4F3' }}>
@@ -810,7 +835,10 @@ export default function Games({ group, gamesData }: GamesProps) {
               <div className="rounded-lg bg-white p-6 shadow">
                 <h2 className="mb-4 text-xl font-semibold">Reorder Games</h2>
 
-                <ReorderGameComponent games={gamesData.reorder_games} />
+                {currentGameType === "reorder" && 
+                (<ReorderGameComponent games={gamesData.reorder_games} 
+                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                />)}
               </div>
 
               {/* Odd One Out Games */}
@@ -819,7 +847,10 @@ export default function Games({ group, gamesData }: GamesProps) {
                 {/*<pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
                   {JSON.stringify(gamesData.odd_one_out_games, null, 2)}
                 </pre>*/}
-                <OddOneOutGameComponent games={gamesData.odd_one_out_games} />
+                {currentGameType === "oddOneOut" && 
+                (<OddOneOutGameComponent games={gamesData.odd_one_out_games} 
+                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                />)}
               </div>
 
               {/* Category Games */}
@@ -828,16 +859,22 @@ export default function Games({ group, gamesData }: GamesProps) {
                 {/*<pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
                   {JSON.stringify(gamesData.category_games, null, 2)}
                 </pre>*/}
-                <CategoriesGameComponent games={gamesData.category_games} />
+                {currentGameType === "categories" && 
+                (<CategoriesGameComponent games={gamesData.category_games} 
+                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                />)}
               </div>
 
               {/* Match Up Games */}
               <div className="rounded-lg bg-white p-6 shadow">
                 <h2 className="mb-4 text-xl font-semibold">Match Up Games</h2>
-                <pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
+                {/*<pre className="overflow-x-auto rounded bg-gray-100 p-4 text-sm">
                   {JSON.stringify(gamesData.match_up_games, null, 2)}
-                </pre>
-                <MatchUpGameComponent games = {gamesData.match_up_games} />
+                </pre>*/}
+                {currentGameType === "matchUp" && 
+                (<MatchUpGameComponent games={gamesData.match_up_games} 
+                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                />)}
               </div>
             </div>
           </div>
