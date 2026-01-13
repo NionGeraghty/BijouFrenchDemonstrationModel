@@ -804,6 +804,12 @@ function CategoriesGameComponent({ games, onComplete }: { games: any[]; onComple
 
 export default function Games({ group, gamesData }: GamesProps) {
 
+  const [studentName, setStudentName] = useState<string|null>(null);
+  const [sessionStarted, setSessionStarted] = useState<boolean>(false);
+  const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now);
+  const [gameStartTime, setGameStartTime] = useState<number>(Date.now);
+  const [gameTimes, setGameTimes] = useState<number[]>([]);
+
   const GAME_FLOW = [
     "reorder",
     "oddOneOut",
@@ -830,14 +836,58 @@ export default function Games({ group, gamesData }: GamesProps) {
               </div>
             )}
 
-            <div className="space-y-8">
+            {/*Name entry*/}
+            {!sessionStarted && (
+              <div className="mx-auto max-w-[1200px] px-2 py-10 order-[2]">
+                Please enter your name.
+                <input
+                  type="text"
+                  value={studentName ?? ""}
+                  placeholder="Enter name"
+                  onChange={(e) => setStudentName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const name = studentName;
+                    if(name){
+                      setSessionStartTime(Date.now);
+                      setGameStartTime(Date.now);
+                      setSessionStarted(true);
+                    }
+                    }
+                  }}
+                  className="mb-4 w-full rounded-lg border border-black bg-white px-4 py-2 text-black"
+                />
+                <button
+                  onClick={()=>{
+                    const name = studentName;
+                    if(name){
+                      setSessionStartTime(Date.now);
+                      setGameStartTime(Date.now);
+                      setSessionStarted(true);
+                    }
+                  }}
+                  className="rounded bg-blue-500 px-6 py-2 text-center text-white transition hover:bg-blue-600"
+                >
+                  Bring on the games!
+                </button>
+              </div>
+            )}
+
+            {/* Games start here */}
+
+            <h2>Time spent on each game: {gameTimes}</h2>
+
+            {sessionStarted &&(<div className="space-y-8">
               {/* Reorder Games */}
               <div className="rounded-lg bg-white p-6 shadow">
                 <h2 className="mb-4 text-xl font-semibold">Reorder Games</h2>
 
                 {currentGameType === "reorder" && 
                 (<ReorderGameComponent games={gamesData.reorder_games} 
-                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                onComplete={() => {
+                  const gameEndTime = Date.now();
+                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
 
@@ -849,7 +899,10 @@ export default function Games({ group, gamesData }: GamesProps) {
                 </pre>*/}
                 {currentGameType === "oddOneOut" && 
                 (<OddOneOutGameComponent games={gamesData.odd_one_out_games} 
-                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                onComplete={() => {
+                  const gameEndTime = Date.now();
+                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
 
@@ -861,7 +914,10 @@ export default function Games({ group, gamesData }: GamesProps) {
                 </pre>*/}
                 {currentGameType === "categories" && 
                 (<CategoriesGameComponent games={gamesData.category_games} 
-                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                onComplete={() => {
+                  const gameEndTime = Date.now();
+                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
 
@@ -873,10 +929,14 @@ export default function Games({ group, gamesData }: GamesProps) {
                 </pre>*/}
                 {currentGameType === "matchUp" && 
                 (<MatchUpGameComponent games={gamesData.match_up_games} 
-                onComplete={() => setCurrentGameTypeIndex(i => i + 1)} 
+                onComplete={() => {
+                  const gameEndTime = Date.now();
+                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
-            </div>
+            </div>)}
+
           </div>
           <Downloadables course={group.slug} />
         </main>
