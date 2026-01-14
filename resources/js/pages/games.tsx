@@ -806,9 +806,11 @@ export default function Games({ group, gamesData }: GamesProps) {
 
   const [studentName, setStudentName] = useState<string|null>(null);
   const [sessionStarted, setSessionStarted] = useState<boolean>(false);
-  const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now);
-  const [gameStartTime, setGameStartTime] = useState<number>(Date.now);
+  const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now());
+  const [gameStartTime, setGameStartTime] = useState<number>(Date.now());
   const [gameTimes, setGameTimes] = useState<number[]>([]);
+
+  const [sessionDetails, setSessionDetails] = useState<{name:string;startTime:number;gameTimes:number[];}>({name:"",startTime:0,gameTimes:[]});
 
   const GAME_FLOW = [
     "reorder",
@@ -849,8 +851,10 @@ export default function Games({ group, gamesData }: GamesProps) {
                     if (e.key === 'Enter') {
                       const name = studentName;
                     if(name){
-                      setSessionStartTime(Date.now);
-                      setGameStartTime(Date.now);
+                      setSessionStartTime(Date.now());
+                      setGameStartTime(Date.now());
+                      let tempSession = {...sessionDetails,name:name,startTime:Date.now()};
+                      setSessionDetails(tempSession);
                       setSessionStarted(true);
                     }
                     }
@@ -861,8 +865,10 @@ export default function Games({ group, gamesData }: GamesProps) {
                   onClick={()=>{
                     const name = studentName;
                     if(name){
-                      setSessionStartTime(Date.now);
-                      setGameStartTime(Date.now);
+                      setSessionStartTime(Date.now());
+                      setGameStartTime(Date.now());
+                      let tempSession = {...sessionDetails,name:name,startTime:Date.now()};
+                      setSessionDetails(tempSession);
                       setSessionStarted(true);
                     }
                   }}
@@ -875,7 +881,21 @@ export default function Games({ group, gamesData }: GamesProps) {
 
             {/* Games start here */}
 
-            <h2>Time spent on each game: {gameTimes}</h2>
+            {/* {<h2>Time spent on each game: {gameTimes}</h2>} */}
+
+            <h2>
+              Name: {sessionDetails.name}<br />
+              Start time: {new Date(sessionDetails.startTime).toLocaleString()}<br />
+              Game times: 
+              <ul>
+                {sessionDetails.gameTimes.map((time, index) => (
+                  <li key={index}>
+                    Game {index + 1}: {time} ms ({new Date(sessionDetails.startTime + time).toLocaleString()})
+                  </li>
+                ))}
+              </ul>
+            </h2>
+
 
             {sessionStarted &&(<div className="space-y-8">
               {/* Reorder Games */}
@@ -886,7 +906,9 @@ export default function Games({ group, gamesData }: GamesProps) {
                 (<ReorderGameComponent games={gamesData.reorder_games} 
                 onComplete={() => {
                   const gameEndTime = Date.now();
-                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  let tempSession = {...sessionDetails,gameTimes:newGameTimes};
+                  setSessionDetails(tempSession);
                   setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
@@ -901,7 +923,9 @@ export default function Games({ group, gamesData }: GamesProps) {
                 (<OddOneOutGameComponent games={gamesData.odd_one_out_games} 
                 onComplete={() => {
                   const gameEndTime = Date.now();
-                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  let tempSession = {...sessionDetails,gameTimes:newGameTimes};
+                  setSessionDetails(tempSession);
                   setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
@@ -916,7 +940,9 @@ export default function Games({ group, gamesData }: GamesProps) {
                 (<CategoriesGameComponent games={gamesData.category_games} 
                 onComplete={() => {
                   const gameEndTime = Date.now();
-                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  let tempSession = {...sessionDetails,gameTimes:newGameTimes};
+                  setSessionDetails(tempSession);
                   setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
@@ -931,7 +957,9 @@ export default function Games({ group, gamesData }: GamesProps) {
                 (<MatchUpGameComponent games={gamesData.match_up_games} 
                 onComplete={() => {
                   const gameEndTime = Date.now();
-                  setGameTimes(prev => [...prev, gameEndTime - sessionStartTime])
+                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  let tempSession = {...sessionDetails,gameTimes:newGameTimes};
+                  setSessionDetails(tempSession);
                   setCurrentGameTypeIndex(i => i + 1)}} 
                 />)}
               </div>
