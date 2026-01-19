@@ -809,6 +809,7 @@ export default function Games({ group, gamesData }: GamesProps) {
   const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now());
   const [gameStartTime, setGameStartTime] = useState<number>(Date.now());
   const [gameTimes, setGameTimes] = useState<number[]>([]);
+  const [sessionId, setSessionId] = useState<number | null>(null);
 
   const [sessionDetails, setSessionDetails] = useState<{name:string;startTime:number;gameTimes:number[];}>({name:"",startTime:0,gameTimes:[]});
 
@@ -823,6 +824,36 @@ export default function Games({ group, gamesData }: GamesProps) {
 
   const [currentGameTypeIndex, setCurrentGameTypeIndex] = useState(0);
   const currentGameType = GAME_FLOW[currentGameTypeIndex];
+
+  const startSession = async () => {
+
+    const newSession = {
+      name: studentName || "",
+      startTime: Date.now(),
+      gameTimes: [] as number[], // start empty
+    };
+
+    setSessionDetails(newSession);
+
+    try {
+      const response = await fetch('/game-sessions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newSession),
+      });
+
+      const data = await response.json();
+
+      // Save the returned session ID
+      setSessionId(data.id);
+
+    } catch (error) {
+      console.error('Failed to create session:', error);
+    }
+  };
+
 
   return (
     <AuthGuard correctPassword={group.course?.access_code || ''} slug={group.slug} group={group}>
@@ -851,10 +882,8 @@ export default function Games({ group, gamesData }: GamesProps) {
                     if (e.key === 'Enter') {
                       const name = studentName;
                     if(name){
-                      setSessionStartTime(Date.now());
                       setGameStartTime(Date.now());
-                      let tempSession = {...sessionDetails,name:name,startTime:Date.now()};
-                      setSessionDetails(tempSession);
+                      startSession();
                       setSessionStarted(true);
                     }
                     }
@@ -865,10 +894,8 @@ export default function Games({ group, gamesData }: GamesProps) {
                   onClick={()=>{
                     const name = studentName;
                     if(name){
-                      setSessionStartTime(Date.now());
                       setGameStartTime(Date.now());
-                      let tempSession = {...sessionDetails,name:name,startTime:Date.now()};
-                      setSessionDetails(tempSession);
+                      startSession();
                       setSessionStarted(true);
                     }
                   }}
@@ -904,12 +931,28 @@ export default function Games({ group, gamesData }: GamesProps) {
 
                 {currentGameType === "reorder" && 
                 (<ReorderGameComponent games={gamesData.reorder_games} 
-                onComplete={() => {
+                onComplete={async() => {
                   const gameEndTime = Date.now();
-                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  const timeSpent = gameEndTime - gameStartTime;
+
+                  const newGameTimes = [...sessionDetails.gameTimes, timeSpent];
                   let tempSession = {...sessionDetails,gameTimes:newGameTimes};
                   setSessionDetails(tempSession);
-                  setCurrentGameTypeIndex(i => i + 1)}} 
+
+                  if (sessionId !== null) {
+                        try {
+                          await fetch(`/api/game-sessions/${sessionId}`, {
+                            method: 'PATCH', // or PUT
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ gameTimes: newGameTimes }),
+                          });
+                        } catch (error) {
+                          console.error("Failed to update game session:", error);
+                        }
+                      }
+
+                  setCurrentGameTypeIndex(i => i + 1);
+                }} 
                 />)}
               </div>
 
@@ -921,12 +964,28 @@ export default function Games({ group, gamesData }: GamesProps) {
                 </pre>*/}
                 {currentGameType === "oddOneOut" && 
                 (<OddOneOutGameComponent games={gamesData.odd_one_out_games} 
-                onComplete={() => {
+                onComplete={async() => {
                   const gameEndTime = Date.now();
-                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  const timeSpent = gameEndTime - gameStartTime;
+
+                  const newGameTimes = [...sessionDetails.gameTimes, timeSpent];
                   let tempSession = {...sessionDetails,gameTimes:newGameTimes};
                   setSessionDetails(tempSession);
-                  setCurrentGameTypeIndex(i => i + 1)}} 
+
+                  if (sessionId !== null) {
+                        try {
+                          await fetch(`/api/game-sessions/${sessionId}`, {
+                            method: 'PATCH', // or PUT
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ gameTimes: newGameTimes }),
+                          });
+                        } catch (error) {
+                          console.error("Failed to update game session:", error);
+                        }
+                      }
+
+                  setCurrentGameTypeIndex(i => i + 1);
+                }} 
                 />)}
               </div>
 
@@ -938,12 +997,28 @@ export default function Games({ group, gamesData }: GamesProps) {
                 </pre>*/}
                 {currentGameType === "categories" && 
                 (<CategoriesGameComponent games={gamesData.category_games} 
-                onComplete={() => {
+                onComplete={async() => {
                   const gameEndTime = Date.now();
-                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  const timeSpent = gameEndTime - gameStartTime;
+
+                  const newGameTimes = [...sessionDetails.gameTimes, timeSpent];
                   let tempSession = {...sessionDetails,gameTimes:newGameTimes};
                   setSessionDetails(tempSession);
-                  setCurrentGameTypeIndex(i => i + 1)}} 
+
+                  if (sessionId !== null) {
+                        try {
+                          await fetch(`/api/game-sessions/${sessionId}`, {
+                            method: 'PATCH', // or PUT
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ gameTimes: newGameTimes }),
+                          });
+                        } catch (error) {
+                          console.error("Failed to update game session:", error);
+                        }
+                      }
+
+                  setCurrentGameTypeIndex(i => i + 1);
+                }} 
                 />)}
               </div>
 
@@ -955,12 +1030,28 @@ export default function Games({ group, gamesData }: GamesProps) {
                 </pre>*/}
                 {currentGameType === "matchUp" && 
                 (<MatchUpGameComponent games={gamesData.match_up_games} 
-                onComplete={() => {
+                onComplete={async() => {
                   const gameEndTime = Date.now();
-                  const newGameTimes = [...sessionDetails.gameTimes, gameEndTime - sessionStartTime];
+                  const timeSpent = gameEndTime - gameStartTime;
+
+                  const newGameTimes = [...sessionDetails.gameTimes, timeSpent];
                   let tempSession = {...sessionDetails,gameTimes:newGameTimes};
                   setSessionDetails(tempSession);
-                  setCurrentGameTypeIndex(i => i + 1)}} 
+
+                  if (sessionId !== null) {
+                        try {
+                          await fetch(`/api/game-sessions/${sessionId}`, {
+                            method: 'PATCH', // or PUT
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ gameTimes: newGameTimes }),
+                          });
+                        } catch (error) {
+                          console.error("Failed to update game session:", error);
+                        }
+                      }
+
+                  setCurrentGameTypeIndex(i => i + 1);
+                }} 
                 />)}
               </div>
             </div>)}

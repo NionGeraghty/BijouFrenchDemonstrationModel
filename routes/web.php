@@ -44,7 +44,7 @@ Route::get('/courses/{group:slug}', [CoursePageController::class, 'show'])->name
 Route::get('/courses/{group:slug}/activities', [CourseActivitiesController::class, 'show'])->name('activities.show');
 Route::get('/courses/{group:slug}/songs', [CourseSongsController::class, 'show'])->name('songs.show');
 Route::get('/courses/{group:slug}/games', [CourseGamesController::class, 'show'])->name('games.show');
-
+Route::post('/game-sessions', [GameSessionController::class, 'store']);
 
 
 Route::get('testHome', function () {
