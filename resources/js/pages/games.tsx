@@ -836,7 +836,7 @@ export default function Games({ group, gamesData }: GamesProps) {
     setSessionDetails(newSession);
 
     try {
-      const response = await fetch('/game-sessions', {
+      const response = await fetch('/api/game-sessions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
