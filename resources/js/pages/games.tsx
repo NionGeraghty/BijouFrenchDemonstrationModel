@@ -169,7 +169,7 @@ function OddOneOutGameComponent({ games, onComplete }: { games: any[]; onComplet
     else{
       onComplete();
     }
-    const [message, setMessage] = useState('Find the odd one out.');
+    setMessage('Find the odd one out.');
     setSelectedWords([]);
     setIsCorrect(false);
   }
