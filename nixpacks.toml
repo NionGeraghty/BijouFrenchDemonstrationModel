@@ -13,11 +13,11 @@ nixPkgs = [
 
 [phases.build]
 commands = [
-  "php -m",
-  "composer install --optimize-autoloader --no-interaction",
-  "npm ci",
+  "composer install --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip --optimize-autoloader --no-scripts --no-interaction",
+  "npm install",
   "npm run build"
 ]
+
 
 [phases.start]
 command = "php artisan serve --host=0.0.0.0 --port=$PORT"
