@@ -20,6 +20,14 @@ WORKDIR /app
 # Copy files
 COPY . .
 
+# Create Laravel cache directories
+RUN mkdir -p \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    bootstrap/cache \
+ && chmod -R 775 storage bootstrap/cache
+
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
