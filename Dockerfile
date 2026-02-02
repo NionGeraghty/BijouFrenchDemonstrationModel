@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.3-cli
 
 # System deps
 RUN apt-get update && apt-get install -y \
@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     curl \
-    npm \
     nodejs \
-    && docker-php-ext-install intl zip opcache pdo pdo_mysql
+    npm \
+    && docker-php-ext-install intl zip pdo pdo_mysql opcache
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -20,7 +20,7 @@ WORKDIR /app
 # Copy files
 COPY . .
 
-# Create Laravel cache directories
+# Laravel directories + permissions
 RUN mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
@@ -34,7 +34,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Build frontend
 RUN npm install && npm run build
 
-# Expose port
+# Expose Railway port
 EXPOSE 8080
 
-CMD php artisan serve --host=0.0.0.0 --port=8080
+# Production-safe entry
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
