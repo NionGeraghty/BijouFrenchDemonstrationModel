@@ -20,12 +20,6 @@ WORKDIR /app
 # Copy files
 COPY . .
 
-# Clear caches to pick up the new APP_URL
-RUN php artisan config:clear \
- && php artisan route:clear \
- && php artisan view:clear \
- && php artisan cache:clear
-
 # Laravel directories + permissions
 RUN mkdir -p \
     storage/framework/cache \
