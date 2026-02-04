@@ -32,7 +32,9 @@ RUN mkdir -p \
 RUN composer install --no-dev --optimize-autoloader
 
 # Build frontend
-RUN npm install && npm run build
+RUN rm -rf node_modules public/build \
+ && npm install \
+ && npm run build
 
 # Expose Railway port
 EXPOSE 8080
