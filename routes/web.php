@@ -26,7 +26,7 @@ Route::get('/', function () {
 })->name('home');
 
 
-
+ 
 
 //Route::get('/courses/{course}/{page?}', [CourseController::class, 'show'])
 //    ->where('page', 'activitysheets|songs')
